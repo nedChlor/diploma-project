@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LexAI — переводчик и анализ лексики</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <div class="logo">LexAI</div>
+    <nav>
+      <a href="index.html">Переводчик</a>
+      <a href="history.html">История</a>
+      <a href="about.html">О проекте</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Интеллектуальный переводчик</h1>
+
+    <div class="translator">
+      <div class="box">
+        <select id="langFrom">
+          <option value="русский">Русский</option>
+          <option value="английский">Английский</option>
+          <option value="казахский">Казахский</option>
+        </select>
+        <textarea id="inputText" placeholder="Введите текст..."></textarea>
+      </div>
+
+      <button id="translateBtn">Перевести →</button>
+
+      <div class="box">
+        <select id="langTo">
+          <option value="английский">Английский</option>
+          <option value="русский">Русский</option>
+          <option value="казахский">Казахский</option>
+        </select>
+        <textarea id="outputText" placeholder="Перевод появится здесь..." readonly></textarea>
+      </div>
+    </div>
+
+    <div id="analysis" class="analysis hidden">
+      <h2>Анализ лексики</h2>
+      <div id="analysisResult"></div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

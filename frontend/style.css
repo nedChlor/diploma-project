@@ -1,0 +1,149 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f1117;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+
+/* Шапка */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  background: #1a1d27;
+  border-bottom: 1px solid #2a2d3a;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #4f8ef7;
+  letter-spacing: 1px;
+}
+
+nav a {
+  color: #a0a0b0;
+  text-decoration: none;
+  margin-left: 28px;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: #4f8ef7;
+}
+
+/* Основной контент */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 40px;
+  color: #ffffff;
+}
+
+/* Блок переводчика */
+.translator {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+select {
+  background: #1a1d27;
+  color: #e0e0e0;
+  border: 1px solid #2a2d3a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+select:focus {
+  border-color: #4f8ef7;
+}
+
+textarea {
+  background: #1a1d27;
+  color: #e0e0e0;
+  border: 1px solid #2a2d3a;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 16px;
+  height: 220px;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+textarea:focus {
+  border-color: #4f8ef7;
+}
+
+textarea[readonly] {
+  background: #151720;
+  cursor: default;
+}
+
+/* Кнопка */
+#translateBtn {
+  background: #4f8ef7;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 44px;
+  transition: background 0.2s, transform 0.1s;
+  white-space: nowrap;
+}
+
+#translateBtn:hover {
+  background: #3a7be0;
+  transform: scale(1.05);
+}
+
+#translateBtn:active {
+  transform: scale(0.97);
+}
+
+/* Анализ лексики */
+.analysis {
+  margin-top: 40px;
+  background: #1a1d27;
+  border: 1px solid #2a2d3a;
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.analysis h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #4f8ef7;
+}
+
+.hidden {
+  display: none;
+}
