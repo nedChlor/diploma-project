@@ -19,9 +19,11 @@
 
   <main>
     <h1>Интеллектуальный переводчик</h1>
+    <p class="subtitle">Перевод и анализ текста на основе искусственного интеллекта</p>
 
     <div class="translator">
       <div class="box">
+        <span class="box-label">Исходный язык</span>
         <select id="langFrom">
           <option value="русский">Русский</option>
           <option value="английский">Английский</option>
@@ -30,9 +32,14 @@
         <textarea id="inputText" placeholder="Введите текст..."></textarea>
       </div>
 
-      <button id="translateBtn">Перевести →</button>
+      <div class="divider"></div>
+
+      <button id="translateBtn">→</button>
+
+      <div class="divider"></div>
 
       <div class="box">
+        <span class="box-label">Перевод</span>
         <select id="langTo">
           <option value="английский">Английский</option>
           <option value="русский">Русский</option>
