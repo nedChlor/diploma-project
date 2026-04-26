@@ -3,61 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LexAI — интеллектуальный переводчик с анализом лексики на основе искусственного интеллекта. Поддержка русского, английского и казахского языков.">
+  <meta name="theme-color" content="#667eea">
+
   <title>LexAI — переводчик и анализ лексики</title>
+
+  <!-- Preconnect для ускорения загрузки шрифтов -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- Ссылка для быстрого перехода к контенту (доступность) -->
+  <a href="#main-content" class="skip-link">Перейти к содержимому</a>
+
   <header>
-    <div class="logo">LexAI</div>
-    <nav>
-      <a href="index.html">Переводчик</a>
+    <div class="logo" aria-label="LexAI — главная">LexAI</div>
+    <nav aria-label="Основная навигация">
+      <a href="index.html" aria-current="page">Переводчик</a>
       <a href="history.html">История</a>
       <a href="about.html">О проекте</a>
     </nav>
   </header>
 
-  <main>
+  <main id="main-content">
     <h1>Интеллектуальный переводчик</h1>
     <p class="subtitle">Перевод и анализ текста на основе искусственного интеллекта</p>
 
-    <div class="translator">
+    <div class="translator" role="region" aria-label="Переводчик">
+
+      <!-- Левая панель — исходный текст -->
       <div class="box">
-        <span class="box-label">Исходный язык</span>
-        <select id="langFrom">
+        <label class="box-label" for="langFrom">Исходный язык</label>
+        <select id="langFrom" name="langFrom">
           <option value="русский">Русский</option>
           <option value="английский">Английский</option>
           <option value="казахский">Казахский</option>
         </select>
-        <textarea id="inputText" placeholder="Введите текст..."></textarea>
+
+        <label class="sr-only" for="inputText">Текст для перевода</label>
+        <textarea
+          id="inputText"
+          name="inputText"
+          placeholder="Введите текст..."
+          aria-describedby="inputHint"
+          spellcheck="true"
+          autocomplete="off"
+        ></textarea>
+        <span id="inputHint" class="sr-only">Введите текст, который нужно перевести</span>
       </div>
 
-      <div class="divider"></div>
+      <div class="divider" aria-hidden="true"></div>
 
-      <button id="translateBtn" title="Перевести">→</button>
+      <button
+        id="translateBtn"
+        aria-label="Перевести текст"
+        title="Перевести"
+        type="button"
+      >→</button>
 
-      <div class="divider"></div>
+      <div class="divider" aria-hidden="true"></div>
 
+      <!-- Правая панель — результат перевода -->
       <div class="box">
-        <span class="box-label">Перевод</span>
-        <select id="langTo">
+        <label class="box-label" for="langTo">Перевод</label>
+        <select id="langTo" name="langTo">
           <option value="английский">Английский</option>
           <option value="русский">Русский</option>
           <option value="казахский">Казахский</option>
         </select>
-        <textarea id="outputText" placeholder="Перевод появится здесь..." readonly></textarea>
+
+        <label class="sr-only" for="outputText">Результат перевода</label>
+        <textarea
+          id="outputText"
+          name="outputText"
+          placeholder="Перевод появится здесь..."
+          readonly
+          aria-live="polite"
+          aria-atomic="true"
+          aria-label="Результат перевода"
+        ></textarea>
       </div>
+
     </div>
 
-    <div id="analysis" class="analysis hidden">
+    <!-- Блок анализа лексики -->
+    <section
+      id="analysis"
+      class="analysis hidden"
+      aria-label="Анализ лексики"
+      aria-live="polite"
+    >
       <h2>Анализ лексики</h2>
       <div id="analysisResult"></div>
-    </div>
+    </section>
   </main>
 
-  <script src="app.js"></script>
+  <!-- defer: скрипт загружается после парсинга HTML, не блокируя рендер -->
+  <script src="app.js" defer></script>
 </body>
 </html>
