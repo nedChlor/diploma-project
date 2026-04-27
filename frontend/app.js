@@ -39,3 +39,60 @@ themeToggle.addEventListener('click', () => {
   localStorage.setItem('theme', newTheme);
   applyTheme(newTheme);
 });
+
+// ============================================
+// Переводчик
+// ============================================
+
+const translateBtn = document.getElementById('translateBtn');
+
+// Очистка полей при загрузке страницы
+window.addEventListener('load', () => {
+  inputText.value = '';
+  outputText.value = '';
+  analysisResult.innerHTML = '';
+});
+const inputText = document.getElementById('inputText');
+const outputText = document.getElementById('outputText');
+const langFrom = document.getElementById('langFrom');
+const langTo = document.getElementById('langTo');
+const analysisResult = document.getElementById('analysisResult');
+
+const originalBtnIcon = translateBtn.innerHTML;
+
+translateBtn.addEventListener('click', async () => {
+  const text = inputText.value.trim();
+  if (!text) {
+    alert('Введите текст для перевода');
+    return;
+  }
+  translateBtn.disabled = true;
+  translateBtn.innerHTML = '<div class="spinner"></div>';
+  try {
+    const response = await fetch('http://127.0.0.1:5000/translate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text,
+        from_lang: langFrom.value,
+        to_lang: langTo.value
+      })
+    });
+    const data = await response.json();
+        if (response.ok) {
+          outputText.value = data.translation;
+          let analysis = data.analysis.replace(/\n/g, '<br>');
+          // Simple markdown to HTML
+          analysis = analysis.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+          analysis = analysis.replace(/\*(.*?)\*/g, '<em>$1</em>');
+          analysisResult.innerHTML = analysis;
+        } else {
+      alert('Ошибка: ' + data.error);
+    }
+  } catch (error) {
+    alert('Ошибка сети: ' + error.message);
+  } finally {
+    translateBtn.disabled = false;
+    translateBtn.innerHTML = originalBtnIcon;
+  }
+});

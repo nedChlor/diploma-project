@@ -326,7 +326,7 @@ textarea:focus {
 
 textarea[readonly] {
   background: var(--secondary-bg);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   cursor: default;
   resize: none;
 }
@@ -486,10 +486,43 @@ textarea::placeholder {
 }
 
 /* ============================================
-   Utility Classes
-   ============================================ */
-.hidden {
-  display: none;
+    Skip Link
+    ============================================ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 0 0 var(--radius) var(--radius);
+  text-decoration: none;
+  z-index: 9999;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================
+    Spinner
+    ============================================ */
+.spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid var(--accent);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes fadeIn {
