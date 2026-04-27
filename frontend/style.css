@@ -21,20 +21,18 @@
 /* ============================================
    Dark Theme
    ============================================ */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary-bg: #1e1e2e;
-    --secondary-bg: #2a2a3e;
-    --accent: #60a5fa;
-    --accent-hover: #3b82f6;
-    --text-primary: #e2e8f0;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --border: #374151;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
-    --body-bg: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
-  }
+:root.dark {
+  --primary-bg: #1e1e2e;
+  --secondary-bg: #2a2a3e;
+  --accent: #60a5fa;
+  --accent-hover: #3b82f6;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #374151;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --body-bg: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
 }
 
 /* ============================================
@@ -88,12 +86,11 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background 0.3s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  header {
-    background: rgba(30, 30, 46, 0.95);
-  }
+:root.dark header {
+  background: rgba(30, 30, 46, 0.95);
 }
 
 .logo {
@@ -138,6 +135,32 @@ nav a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
   border-radius: 2px;
+}
+
+#themeToggle {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  margin-left: 1rem;
+}
+
+#themeToggle:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+#themeToggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ============================================
@@ -325,7 +348,6 @@ textarea::placeholder {
   color: #fff;
   border: none;
   border-radius: var(--radius);
-  font-size: 1.5rem;
   cursor: pointer;
   align-self: center;
   margin-top: 3rem;
@@ -334,6 +356,7 @@ textarea::placeholder {
   position: relative;
   overflow: hidden;
   will-change: transform;
+  flex-shrink: 0;
 }
 
 #translateBtn::before {
@@ -373,6 +396,45 @@ textarea::placeholder {
   margin-top: 2.75rem;
   border-radius: 1px;
   flex-shrink: 0;
+}
+
+/* ============================================
+   Analysis Card
+   ============================================ */
+.analysis {
+  margin-top: 2.25rem;
+  background: var(--primary-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.25rem;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.6s ease-out 0.8s both;
+}
+
+.analysis h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.analysis h2::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 20px;
+  background: var(--gradient);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+#analysisResult {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.8;
 }
 
 /* ============================================
@@ -424,45 +486,6 @@ textarea::placeholder {
 }
 
 /* ============================================
-   Analysis Card
-   ============================================ */
-.analysis {
-  margin-top: 2.25rem;
-  background: var(--primary-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 2.25rem;
-  box-shadow: var(--shadow);
-  animation: fadeIn 0.6s ease-out 0.8s both;
-}
-
-.analysis h2 {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 1.25rem;
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.analysis h2::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 20px;
-  background: var(--gradient);
-  border-radius: 3px;
-  flex-shrink: 0;
-}
-
-#analysisResult {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  line-height: 1.8;
-}
-
-/* ============================================
    Utility Classes
    ============================================ */
 .hidden {
@@ -495,6 +518,12 @@ textarea::placeholder {
     font-size: 0.875rem;
   }
 
+  #themeToggle {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 0.5rem;
+  }
+
   h1 {
     font-size: 2.25rem;
   }
@@ -525,8 +554,7 @@ textarea::placeholder {
     width: 100%;
     max-width: 12.5rem;
     height: 3rem;
-    margin: 0.5rem 0 0;
-    font-size: 1.25rem;
+    margin: 0.5rem auto 0;
   }
 
   .analysis {
@@ -563,8 +591,6 @@ textarea::placeholder {
 /* ============================================
    Accessibility Utilities
    ============================================ */
-
-/* Скрыто визуально, но читается скринридерами */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -577,7 +603,6 @@ textarea::placeholder {
   border: 0;
 }
 
-/* Ссылка «перейти к содержимому» — видна только при фокусе с клавиатуры */
 .skip-link {
   position: absolute;
   top: -100%;
