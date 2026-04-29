@@ -13,7 +13,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Firebase конфигурация -->
+  <script type="module" src="js/firebase-config.js"></script>
 </head>
 <body>
 
@@ -24,15 +27,32 @@
     <div class="logo" aria-label="LexAI — главная">LexAI</div>
     <nav aria-label="Основная навигация">
       <a href="index.html">Переводчик</a>
-      <a href="history.html">История</a>
       <a href="about.html" aria-current="page">О проекте</a>
     </nav>
-    <button id="themeToggle" aria-label="Переключить тему" title="Переключить тему">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="5"/>
-        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-      </svg>
-    </button>
+    <div class="header-right" style="margin-left: auto;">
+      <div id="userInfo" class="user-info hidden">
+        <button id="userButton" class="user-button" aria-label="Меню пользователя">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span id="userName">Пользователь</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+        <div id="userDropdown" class="user-dropdown hidden">
+          <button id="logoutBtn" class="dropdown-item">Выйти</button>
+        </div>
+      </div>
+      <a href="login.html" id="loginLink" class="login-link">Войти</a>
+      <button id="themeToggle" aria-label="Переключить тему" title="Переключить тему">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+      </button>
+    </div>
   </header>
 
   <main id="main-content">
@@ -60,6 +80,6 @@
   </main>
 
   <!-- defer: скрипт загружается после парсинга HTML, не блокируя рендер -->
-  <script src="app.js" defer></script>
+  <script src="js/app.js" defer></script>
 </body>
 </html>

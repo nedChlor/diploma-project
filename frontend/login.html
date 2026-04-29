@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LexAI — авторизация пользователя">
+  <meta name="theme-color" content="#667eea">
+
+  <title>Авторизация — LexAI</title>
+
+  <!-- Preconnect для ускорения загрузки шрифтов -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Firebase конфигурация -->
+  <script type="module" src="js/firebase-config.js"></script>
+</head>
+<body>
+
+  <!-- Ссылка для быстрого перехода к контенту (доступность) -->
+  <a href="#main-content" class="skip-link">Перейти к содержимому</a>
+
+  <header>
+    <div class="logo" aria-label="LexAI — главная">LexAI</div>
+    <nav aria-label="Основная навигация">
+      <a href="index.html">Переводчик</a>
+      <a href="about.html">О проекте</a>
+      <a href="login.html" aria-current="page">Войти</a>
+    </nav>
+    <button id="themeToggle" style="margin-left: auto;" aria-label="Переключить тему" title="Переключить тему">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+    </button>
+  </header>
+
+  <main id="main-content">
+    <h1>Авторизация</h1>
+    <p class="subtitle">Войдите в свой аккаунт или зарегистрируйтесь</p>
+
+    <div class="translator" role="region" aria-label="Форма авторизации">
+
+      <!-- Левая панель — Вход -->
+      <div class="box">
+        <h2>Вход</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" name="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Пароль</label>
+            <input type="password" id="loginPassword" name="password" required placeholder="Пароль">
+          </div>
+          <button type="submit" class="auth-btn">Войти</button>
+        </form>
+        <div id="loginMessage" class="message"></div>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <!-- Правая панель — Регистрация -->
+      <div class="box">
+        <h2>Регистрация</h2>
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" name="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Пароль</label>
+            <input type="password" id="registerPassword" name="password" required placeholder="Пароль">
+          </div>
+          <div class="form-group">
+            <label for="registerConfirmPassword">Подтвердите пароль</label>
+            <input type="password" id="registerConfirmPassword" name="confirmPassword" required placeholder="Подтвердите пароль">
+          </div>
+          <button type="submit" class="auth-btn">Зарегистрироваться</button>
+        </form>
+        <div id="registerMessage" class="message"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- defer: скрипт загружается после парсинга HTML, не блокируя рендер -->
+  <script src="js/app.js" defer></script>
+  <script src="js/auth.js" defer></script>
+</body>
+</html>
