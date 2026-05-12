@@ -97,7 +97,7 @@ Respond with valid JSON in this format:
 
         # Call OpenRouter API
         response = client.chat.completions.create(
-            model="openai/gpt-oss-120b:free",
+            model="openrouter/owl-alpha",
             messages=[{"role": "user", "content": prompt}],
         )
 
