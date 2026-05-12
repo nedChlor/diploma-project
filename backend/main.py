@@ -18,11 +18,8 @@ from config import OPENROUTER_API_KEY, DEBUG, PORT, MAX_TEXT_LENGTH, REQUESTS_PE
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend', static_url_path='')
 CORS(app)
-
-# Путь к папке frontend
-frontend_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend')
 
 # Rate limiting
 limiter = Limiter(
@@ -42,12 +39,14 @@ client = OpenAI(
 # ============================================
 
 @app.route('/')
+@limiter.exempt
 def serve_index():
-    return send_from_directory(frontend_dir, 'index.html')
+    return app.send_static_file('index.html')
 
 @app.route('/<path:filename>')
+@limiter.exempt
 def serve_static(filename):
-    return send_from_directory(frontend_dir, filename)
+    return app.send_static_file(filename)
 
 # ============================================
 # API
