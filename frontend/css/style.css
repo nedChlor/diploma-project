@@ -540,7 +540,7 @@ textarea {
   line-height: 1.7;
   min-height: 200px;
   height: 260px;
-  resize: vertical;
+  resize: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
