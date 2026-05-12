@@ -1,7 +1,6 @@
 # Standard library imports
 import json
 import logging
-import os
 import re
 
 # Third-party imports
@@ -53,7 +52,7 @@ def serve_static(filename):
 # ============================================
 
 @app.route('/translate', methods=['POST'])
-@limiter.limit("10 per minute")
+@limiter.limit("60 per minute")
 def translate():
     """
     Handle translation requests with lexical analysis.
@@ -98,7 +97,7 @@ Respond with valid JSON in this format:
 
         # Call OpenRouter API
         response = client.chat.completions.create(
-            model="nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+            model="openai/gpt-oss-120b:free",
             messages=[{"role": "user", "content": prompt}],
         )
 

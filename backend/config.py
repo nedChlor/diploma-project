@@ -16,4 +16,4 @@ if not OPENROUTER_API_KEY:
 
 # Limits
 MAX_TEXT_LENGTH = 5000  # Maximum allowed text length
-REQUESTS_PER_MINUTE = 10  # Rate limit per minute
+REQUESTS_PER_MINUTE = 60  # Rate limit per minute
