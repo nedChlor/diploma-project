@@ -1,0 +1,130 @@
+# LexAI — Интеллектуальный переводчик и анализ лексики
+
+Веб-приложение для перевода текста и анализа лексики на основе искусственного интеллекта с поддержкой русского, английского и казахского языков.
+
+## 🚀 Возможности
+
+- **Перевод текста** между русским, английским и казахским языками
+- **Анализ лексики** с использованием AI (OpenRouter API)
+- **История переводов** с сохранением в Firebase
+- **Аутентификация пользователей** через Firebase
+- **Тёмная/светлая тема** интерфейса
+- **Адаптивный дизайн** для всех устройств
+- **Rate limiting** для защиты API
+- **Валидация входных данных**
+
+## 📁 Структура проекта
+
+```
+.
+├── backend/                 # Серверная часть (Flask)
+│   ├── main.py             # Основной файл приложения
+│   ├── config.py           # Конфигурация
+│   └── requirements.txt    # Зависимости Python
+├── frontend/               # Клиентская часть
+│   ├── index.html          # Главная страница (переводчик)
+│   ├── about.html          # Страница о проекте
+│   ├── login.html          # Страница входа/регистрации
+│   ├── css/                # Стили
+│   └── js/                 # JavaScript код
+└── README.md               # Этот файл
+```
+
+## 🛠 Технологии
+
+### Backend
+- **Flask** — веб-фреймворк
+- **Flask-CORS** — поддержка CORS
+- **Flask-Limiter** — ограничение запросов
+- **OpenAI** — интеграция с OpenRouter API для AI-функций
+- **python-dotenv** — управление переменными окружения
+- **Gunicorn** — WSGI сервер для продакшена
+
+### Frontend
+- **HTML5/CSS3** — семантическая вёрстка
+- **Vanilla JavaScript** — клиентская логика
+- **Firebase** — аутентификация и база данных
+- **Google Fonts (Inter)** — шрифты
+
+## ⚙️ Установка и запуск
+
+### Требования
+- Python 3.8+
+- Node.js (опционально, для разработки фронтенда)
+- Аккаунт на [OpenRouter](https://openrouter.ai/)
+- Проект Firebase
+
+### 1. Клонирование репозитория
+
+```bash
+git clone <repository-url>
+cd <project-directory>
+```
+
+### 2. Настройка Backend
+
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# или
+venv\Scripts\activate     # Windows
+
+pip install -r requirements.txt
+```
+
+### 3. Переменные окружения
+
+Создайте файл `.env` в папке `backend/`:
+
+```env
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+FLASK_DEBUG=True
+PORT=5000
+```
+
+### 4. Настройка Firebase
+
+Отредактируйте файл `frontend/js/firebase-config.js` с вашими данными Firebase:
+
+```javascript
+const firebaseConfig = {
+  apiKey: "your-api-key",
+  authDomain: "your-auth-domain",
+  projectId: "your-project-id",
+  storageBucket: "your-storage-bucket",
+  messagingSenderId: "your-sender-id",
+  appId: "your-app-id"
+};
+```
+
+### 5. Запуск приложения
+
+```bash
+cd backend
+python main.py
+```
+
+Приложение будет доступно по адресу: http://localhost:5000
+
+### Production запуск
+
+```bash
+cd backend
+gunicorn -w 4 -b 0.0.0.0:$PORT main:app
+```
+
+## 🔒 Безопасность
+
+- Rate limiting: 60 запросов в минуту
+- Максимальная длина текста: 5000 символов
+- Валидация всех входных данных
+- CORS настроен для безопасного доступа
+
+## 📝 Лицензия
+
+MIT
+
+## 👥 Авторы
+
+LexAI Team
