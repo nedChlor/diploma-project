@@ -23,7 +23,6 @@ if (window.auth && window.onAuthStateChanged) {
       // Пользователь не авторизован
       userInfo.classList.add('hidden');
       if (loginLink) loginLink.classList.remove('hidden');
-      if (historyToggle) historyToggle.classList.add('hidden');
       userDropdown.classList.add('hidden'); // Скрыть dropdown
       historySidebar.classList.remove('active'); // Закрыть sidebar
     }
@@ -59,10 +58,13 @@ document.addEventListener('click', (e) => {
 });
 
 // ============================================
-// История переводов
+// Translation History Management
 // ============================================
 
-// Загрузить историю
+/**
+ * Load translation history from storage.
+ * @returns {Promise<Array>} History array
+ */
 async function loadHistory() {
   if (window.currentUser) {
     // Загрузить из Firestore
@@ -85,7 +87,16 @@ async function loadHistory() {
     }
   } else {
     // Загрузить из localStorage
-    return JSON.parse(localStorage.getItem('translationHistory') || '[]');
+    const stored = localStorage.getItem('translationHistory');
+    let history = [];
+    try {
+      history = JSON.parse(stored || '[]');
+      if (!Array.isArray(history)) history = [];
+    } catch (e) {
+      console.error('Error parsing localStorage history:', e);
+      history = [];
+    }
+    return history;
   }
 }
 
@@ -114,7 +125,7 @@ async function addToHistory(translationData) {
     }
   } else {
     // Добавить в localStorage
-    const history = loadHistory();
+    const history = await loadHistory();
     history.push(translationData);
     saveHistory(history);
   }
@@ -139,11 +150,10 @@ async function removeFromHistory(index) {
   }
 }
 
-// Отобразить историю
+// Render history list
 async function renderHistory() {
   const originalHistory = await loadHistory();
-  console.log('Loaded history:', originalHistory);
-  const reversedHistory = originalHistory; // Уже отсортирован от новых к старым
+  const reversedHistory = originalHistory; // Already sorted from newest to oldest
   historyList.innerHTML = reversedHistory.length === 0
     ? '<p>История пуста</p>'
     : reversedHistory.map((item, index) => {
@@ -286,7 +296,7 @@ if (translateBtn) {
     translateBtn.innerHTML = '<div class="spinner"></div>';
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/translate', {
+      const response = await fetch('/translate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -425,6 +435,7 @@ if (clearHistory) {
       }
     } else {
       localStorage.removeItem('translationHistory');
+      localStorage.setItem('translationHistory', '[]'); // Очистить, установив пустой массив
       await renderHistory();
     }
   });

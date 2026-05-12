@@ -3,15 +3,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Настройки
-OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY')
-DEBUG = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
-PORT = int(os.getenv('PORT', 5000))
+# API Configuration
+OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY')  # API key for OpenRouter service
 
-# Валидация
+# Application Settings
+DEBUG = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'  # Enable debug mode
+PORT = int(os.getenv('PORT', 5000))  # Server port
+
+# Validation
 if not OPENROUTER_API_KEY:
-    raise ValueError("OPENROUTER_API_KEY not set")
+    raise ValueError("OPENROUTER_API_KEY not set in environment variables")
 
-# Лимиты
-MAX_TEXT_LENGTH = 5000
-REQUESTS_PER_MINUTE = 10
+# Limits
+MAX_TEXT_LENGTH = 5000  # Maximum allowed text length
+REQUESTS_PER_MINUTE = 10  # Rate limit per minute

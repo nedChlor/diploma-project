@@ -18,10 +18,26 @@ const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Экспорт для использования в других модулях
-export { auth, db, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, limit };
+// Exports for use in other modules
+export {
+  auth,
+  db,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  orderBy,
+  limit
+};
 
-// Установка глобальных переменных для доступа из non-module скриптов
+// Global variables for non-module scripts
 window.auth = auth;
 window.db = db;
 window.signInWithEmailAndPassword = signInWithEmailAndPassword;

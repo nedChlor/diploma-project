@@ -1,8 +1,13 @@
 // ============================================
-// Firebase Auth Integration
+// Firebase Authentication Integration
 // ============================================
 
-// Функция для показа сообщений
+/**
+ * Display message in element
+ * @param {string} elementId - Element ID
+ * @param {string} message - Message text
+ * @param {string} type - Message type ('success' or 'error')
+ */
 function showMessage(elementId, message, type = 'error') {
   const element = document.getElementById(elementId);
   element.textContent = message;
@@ -97,14 +102,3 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     showMessage('registerMessage', message);
   }
 });
-
-// Функция для выхода (если нужно добавить кнопку выхода)
-// async function logout() {
-//   try {
-//     await window.signOut(window.auth);
-//     console.log('User signed out');
-//     // Обновить UI
-//   } catch (error) {
-//     console.error('Logout error:', error);
-//   }
-// }

@@ -36,8 +36,8 @@
 }
 
 /* ============================================
-   Reset
-   ============================================ */
+    Base Styles & Reset
+    ============================================ */
 *,
 *::before,
 *::after {
@@ -225,6 +225,7 @@ nav a:focus-visible {
 .history-list {
   padding: 1rem;
   flex: 1;
+  overflow-y: auto;
 }
 
 .history-footer {

@@ -1,12 +1,17 @@
-import re
+# Standard library imports
 import json
 import logging
-from flask import Flask, request, jsonify
+import os
+import re
+
+# Third-party imports
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from openai import OpenAI
 
+# Local imports
 from config import OPENROUTER_API_KEY, DEBUG, PORT, MAX_TEXT_LENGTH, REQUESTS_PER_MINUTE
 
 # Настройка логирования
@@ -15,6 +20,9 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)
+
+# Путь к папке frontend
+frontend_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend')
 
 # Rate limiting
 limiter = Limiter(
@@ -29,15 +37,37 @@ client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
 )
 
+# ============================================
+# Раздача фронтенда
+# ============================================
+
+@app.route('/')
+def serve_index():
+    return send_from_directory(frontend_dir, 'index.html')
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(frontend_dir, filename)
+
+# ============================================
+# API
+# ============================================
+
 @app.route('/translate', methods=['POST'])
 @limiter.limit("10 per minute")
 def translate():
+    """
+    Handle translation requests with lexical analysis.
+
+    Expects JSON payload with 'text', 'from_lang', 'to_lang'.
+    Returns JSON with 'translation' and 'analysis'.
+    """
     data = request.json
     text = data.get('text', '').strip()
     from_lang = data.get('from_lang', '')
     to_lang = data.get('to_lang', '')
 
-    # Валидация входных данных
+    # Input validation
     if not text:
         logger.warning("Missing text field")
         return jsonify({'error': 'Text is required'}), 400
@@ -55,6 +85,7 @@ def translate():
     logger.info(f"Translation request: {len(text)} chars from {from_lang} to {to_lang}")
 
     try:
+        # Create prompt for AI
         prompt = f"""Translate the following text from {from_lang} to {to_lang}.
 Then analyze key words from the TRANSLATED text only — explain what they mean, in {from_lang}.
 
@@ -66,32 +97,31 @@ Respond with valid JSON in this format:
   "analysis": "lexical analysis here"
 }}"""
 
+        # Call OpenRouter API
         response = client.chat.completions.create(
             model="nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
-            messages=[
-                {"role": "user", "content": prompt}
-            ],
+            messages=[{"role": "user", "content": prompt}],
         )
 
         response_text = response.choices[0].message.content.strip()
 
         if not response_text:
             logger.error("Empty response from OpenRouter")
-            return jsonify({'error': 'Сервис перевода вернул пустой ответ'}), 500
+            return jsonify({'error': 'Translation service returned empty response'}), 500
 
-        # Извлекаем JSON из ответа
+        # Extract JSON from response
         json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
         if json_match:
             try:
                 result = json.loads(json_match.group())
-                translation = result.get('translation', '').strip() or 'Перевод не найден'
-                analysis = result.get('analysis', '').strip() or 'Анализ не доступен'
+                translation = result.get('translation', '').strip() or 'Translation not found'
+                analysis = result.get('analysis', '').strip() or 'Analysis not available'
             except json.JSONDecodeError:
-                translation = response_text or 'Перевод не найден'
-                analysis = 'Анализ не доступен'
+                translation = response_text or 'Translation not found'
+                analysis = 'Analysis not available'
         else:
-            translation = response_text or 'Перевод не найден'
-            analysis = 'Анализ не доступен'
+            translation = response_text or 'Translation not found'
+            analysis = 'Analysis not available'
 
         logger.info("Translation successful")
         return jsonify({'translation': translation, 'analysis': analysis})
@@ -100,11 +130,11 @@ Respond with valid JSON in this format:
         logger.error(f"Translation error: {e}")
         error_str = str(e)
         if '429' in error_str:
-            return jsonify({'error': 'Превышен лимит запросов. Попробуйте позже.'}), 429
+            return jsonify({'error': 'Request limit exceeded. Try again later.'}), 429
         elif '503' in error_str:
-            return jsonify({'error': 'Сервис перевода временно недоступен. Попробуйте позже.'}), 503
+            return jsonify({'error': 'Translation service temporarily unavailable. Try again later.'}), 503
         else:
-            return jsonify({'error': 'Ошибка сервиса перевода. Попробуйте позже.'}), 500
+            return jsonify({'error': 'Translation service error. Try again later.'}), 500
 
 if __name__ == '__main__':
     app.run(debug=DEBUG, port=PORT)
