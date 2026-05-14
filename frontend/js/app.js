@@ -249,8 +249,16 @@ applyTheme(savedTheme || (systemDark ? 'dark' : 'light'));
 themeToggle.addEventListener('click', () => {
   const isDark = document.documentElement.classList.contains('dark');
   const newTheme = isDark ? 'light' : 'dark';
+  
+  // Отключаем все анимации и переходы мгновенно при смене темы
+  document.documentElement.classList.add('theme-transition-none');
   localStorage.setItem('theme', newTheme);
   applyTheme(newTheme);
+  
+  // Включаем анимации и переходы обратно после задержки
+  setTimeout(() => {
+    document.documentElement.classList.remove('theme-transition-none');
+  }, 100);
 });
 
 // ============================================
@@ -273,12 +281,41 @@ const analysisSection = document.getElementById('analysis');
 const analysisResult = document.getElementById('analysisResult');
 const originalBtnIcon = translateBtn ? translateBtn.innerHTML : '';
 
+// Текущие значения языков для отслеживания изменений
+let lastLangFrom = langFrom ? langFrom.value : '';
+let lastLangTo = langTo ? langTo.value : '';
+
+// Обработчик изменения языка "Из" - если совпадает с "На", меняем "На" на прежнее значение "Из"
+if (langFrom) {
+  langFrom.addEventListener('change', () => {
+    const newLangFrom = langFrom.value;
+    if (newLangFrom === langTo.value) {
+      langTo.value = lastLangFrom;
+    }
+    lastLangFrom = newLangFrom;
+  });
+}
+
+// Обработчик изменения языка "На" - если совпадает с "Из", меняем "Из" на прежнее значение "На"
+if (langTo) {
+  langTo.addEventListener('change', () => {
+    const newLangTo = langTo.value;
+    if (newLangTo === langFrom.value) {
+      langFrom.value = lastLangTo;
+    }
+    lastLangTo = newLangTo;
+  });
+}
+
 // Очистка полей при загрузке страницы
 window.addEventListener('load', () => {
   if (inputText) inputText.value = '';
   if (outputText) outputText.value = '';
   if (analysisResult) analysisResult.innerHTML = '';
   if (analysisSection) analysisSection.classList.add('hidden');
+  // Инициализировать сохранённые значения
+  if (langFrom) lastLangFrom = langFrom.value;
+  if (langTo) lastLangTo = langTo.value;
 });
 
 // Обработчик кнопки перевода (только если кнопка есть на странице)
@@ -372,6 +409,10 @@ if (swapBtn) {
     const tempLang = langFrom.value;
     langFrom.value = langTo.value;
     langTo.value = tempLang;
+    
+    // Обновить сохранённые значения
+    lastLangFrom = langFrom.value;
+    lastLangTo = langTo.value;
 
     // Обменять тексты только если есть перевод
     if (outputText.value.trim()) {

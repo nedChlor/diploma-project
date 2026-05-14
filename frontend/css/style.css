@@ -1,21 +1,53 @@
 /* ============================================
-   CSS Variables — Light Theme
-   ============================================ */
+    CSS Variables — Light Theme
+    ============================================ */
 :root {
   --primary-bg: #ffffff;
   --secondary-bg: #f8fafc;
   --accent: #3b82f6;
   --accent-hover: #2563eb;
+  --accent-glow: rgba(59, 130, 246, 0.5);
   --text-primary: #1f2937;
   --text-secondary: #6b7280;
   --text-muted: #9ca3af;
   --border: #e5e7eb;
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.3);
+  --shadow-glow-lg: 0 0 40px rgba(59, 130, 246, 0.4);
   --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --radius: 12px;
-  --transition: all 0.3s ease;
+  --gradient-glow: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+  --radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* Disable transitions and pause animations during theme change */
+.theme-transition-none *,
+.theme-transition-none *::before,
+.theme-transition-none *::after {
+  transition: none !important;
+  animation-play-state: paused !important;
+}
+
+/* ============================================
+    Dark Theme
+    ============================================ */
+:root.dark {
+  --primary-bg: #1e1e2e;
+  --secondary-bg: #2a2a3e;
+  --accent: #60a5fa;
+  --accent-hover: #3b82f6;
+  --accent-glow: rgba(96, 165, 250, 0.6);
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #374151;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 30px rgba(96, 165, 250, 0.4);
+  --shadow-glow-lg: 0 0 50px rgba(96, 165, 250, 0.5);
+  --body-bg: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
 }
 
 /* ============================================
@@ -55,6 +87,29 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated background particles */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+  z-index: -1;
+  animation: backgroundFloat 20s ease-in-out infinite;
+}
+
+@keyframes backgroundFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(10px, -10px) rotate(1deg); }
+  66% { transform: translate(-10px, 10px) rotate(-1deg); }
 }
 
 /* ============================================
@@ -71,22 +126,34 @@ body {
 }
 
 /* ============================================
-    Header
-    ============================================ */
+     Header
+     ============================================ */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), var(--shadow-glow);
   position: sticky;
   top: 0;
   z-index: 100;
-  transition: background 0.3s ease;
+  transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: headerFadeIn 0.8s ease-out both;
+}
+
+@keyframes headerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .header-right {
@@ -96,17 +163,41 @@ header {
 }
 
 :root.dark header {
-  background: rgba(30, 30, 46, 0.95);
+  background: rgba(30, 30, 46, 0.85);
+  box-shadow: var(--shadow), var(--shadow-glow);
 }
 
 .logo {
-  font-size: 1.75rem;
+  font-size: 1.875rem;
   font-weight: 800;
   background: var(--gradient);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.025em;
+  position: relative;
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+  0% { filter: drop-shadow(0 0 0px rgba(102, 126, 234, 0)); }
+  100% { filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.5)); }
+}
+
+.logo::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  background: var(--gradient-glow);
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0;
+  animation: logoPulse 4s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 0.5; transform: scale(1.2); }
 }
 
 nav a {
@@ -114,19 +205,21 @@ nav a {
   text-decoration: none;
   margin-left: 2rem;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  padding: 0.5rem 0;
 }
 
 nav a::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
   background: var(--gradient);
-  transition: width 0.3s ease;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
 }
 
 nav a:hover {
@@ -147,21 +240,37 @@ nav a:focus-visible {
   background: var(--secondary-bg);
   border: 1px solid var(--border);
   border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: var(--text-secondary);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   margin-left: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+#themeToggle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
 }
 
 #themeToggle:hover {
-  background: var(--accent);
   color: #fff;
-  transform: scale(1.05);
+  transform: scale(1.1) rotate(180deg);
+  box-shadow: var(--shadow-glow);
+}
+
+#themeToggle:hover::before {
+  opacity: 1;
 }
 
 #themeToggle:focus-visible {
@@ -169,34 +278,45 @@ nav a:focus-visible {
   outline-offset: 2px;
 }
 
+#themeToggle svg {
+  position: relative;
+  z-index: 1;
+}
+
 /* ============================================
     History Sidebar
     ============================================ */
 .history-sidebar {
   position: fixed;
-  top: 5rem; /* Высота header */
+  top: 5rem;
   right: 0;
-  width: 300px;
+  width: 320px;
   height: calc(100vh - 5rem);
-  background: var(--primary-bg);
+  background: rgba(255, 255, 255, 0.85);
   border-left: 1px solid var(--border);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
   transform: translateX(100%);
-  transition: transform 0.3s ease;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 150;
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 }
 
 .history-sidebar.active {
   transform: translateX(0);
 }
 
+:root.dark .history-sidebar {
+  background: rgba(30, 30, 46, 0.85);
+}
+
 .history-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -204,6 +324,10 @@ nav a:focus-visible {
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
+  background: var(--gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 #clearHistory {
@@ -214,12 +338,38 @@ nav a:focus-visible {
   color: var(--text-primary);
   cursor: pointer;
   font-size: 0.875rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+#clearHistory::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
 }
 
 #clearHistory:hover {
-  background: #dc2626;
   color: #fff;
+  transform: scale(1.05);
+}
+
+#clearHistory:hover::before {
+  opacity: 1;
+}
+
+#clearHistory:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+#clearHistory span {
+  position: relative;
+  z-index: 1;
 }
 
 .history-list {
@@ -231,21 +381,52 @@ nav a:focus-visible {
 .history-footer {
   padding: 1rem;
   border-top: 1px solid var(--border);
-  background: var(--primary-bg);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+:root.dark .history-footer {
+  background: rgba(42, 42, 62, 0.5);
+}
+
+:root.dark .history-footer {
+  background: rgba(42, 42, 62, 0.5);
 }
 
 .history-item {
   background: var(--secondary-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 0.75rem;
-  margin-bottom: 0.75rem;
+  padding: 0.875rem;
+  margin-bottom: 0.875rem;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  animation: historyItemFadeIn 0.5s ease-out both;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+@keyframes historyItemFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 .history-item:hover {
   background: var(--accent);
+  color: #fff;
+  transform: translateX(-5px) scale(1.02);
+  box-shadow: var(--shadow-glow);
+}
+
+.history-item:hover .history-actions .delete-btn {
+  background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
 
@@ -270,37 +451,75 @@ nav a:focus-visible {
 .delete-btn {
   background: var(--secondary-bg);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 0.25rem 0.5rem;
   font-size: 0.75rem;
   cursor: pointer;
   color: var(--text-primary);
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.delete-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
 }
 
 .delete-btn:hover {
-  background: #dc2626;
   color: #fff;
+  transform: scale(1.05);
+}
+
+.delete-btn:hover::before {
+  opacity: 1;
+}
+
+.delete-btn span {
+  position: relative;
+  z-index: 1;
 }
 
 #historyToggle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   background: var(--secondary-bg);
   border: 1px solid var(--border);
   border-radius: 50%;
   cursor: pointer;
   color: var(--text-secondary);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   margin-right: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+#historyToggle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
 }
 
 #historyToggle:hover {
-  background: var(--accent);
   color: #fff;
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: var(--shadow-glow);
+}
+
+#historyToggle:hover::before {
+  opacity: 1;
 }
 
 #historyToggle:focus-visible {
@@ -308,9 +527,14 @@ nav a:focus-visible {
   outline-offset: 2px;
 }
 
+#historyToggle svg {
+  position: relative;
+  z-index: 1;
+}
+
 /* ============================================
-    User Info
-    ============================================ */
+     User Info
+     ============================================ */
 .user-info {
   position: relative;
   display: flex;
@@ -324,17 +548,33 @@ nav a:focus-visible {
   background: var(--secondary-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 0.875rem;
   color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.875rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
 }
 
 .user-button:hover {
-  background: var(--accent);
   color: #fff;
   border-color: var(--accent);
+  box-shadow: var(--shadow-glow);
+}
+
+.user-button:hover::before {
+  opacity: 1;
 }
 
 .user-button:focus-visible {
@@ -342,17 +582,41 @@ nav a:focus-visible {
   outline-offset: 2px;
 }
 
+.user-button span,
+.user-button svg {
+  position: relative;
+  z-index: 1;
+}
+
 .user-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--primary-bg);
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  min-width: 120px;
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  min-width: 140px;
   z-index: 200;
   margin-top: 0.5rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: dropdownFadeIn 0.3s ease-out both;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:root.dark .user-dropdown {
+  background: rgba(30, 30, 46, 0.9);
 }
 
 .dropdown-item {
@@ -364,11 +628,29 @@ nav a:focus-visible {
   color: #dc2626;
   cursor: pointer;
   font-size: 0.875rem;
-  transition: background 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.dropdown-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(220, 38, 38, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
 }
 
 .dropdown-item:hover {
   background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+  padding-left: 1.25rem;
+}
+
+.dropdown-item:hover::before {
+  opacity: 1;
 }
 
 .dropdown-item:focus-visible {
@@ -380,11 +662,27 @@ nav a:focus-visible {
   color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.login-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gradient);
+  transition: width 0.3s ease;
 }
 
 .login-link:hover {
   color: var(--text-primary);
+}
+
+.login-link:hover::after {
+  width: 100%;
 }
 
 .login-link:focus-visible {
@@ -394,8 +692,8 @@ nav a:focus-visible {
 }
 
 /* ============================================
-   Main Content
-   ============================================ */
+    Main Content
+    ============================================ */
 main {
   max-width: 1100px;
   margin: 0 auto;
@@ -404,7 +702,7 @@ main {
 
 h1 {
   text-align: center;
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
   letter-spacing: -0.025em;
@@ -412,14 +710,20 @@ h1 {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: fadeInUp 0.8s ease-out both;
+  animation: fadeInUp 0.8s ease-out both, textGlow 3s ease-in-out infinite alternate;
   will-change: transform, opacity;
+  position: relative;
+}
+
+@keyframes textGlow {
+  0% { filter: drop-shadow(0 0 0px rgba(102, 126, 234, 0)); }
+  100% { filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.3)); }
 }
 
 .subtitle {
   text-align: center;
   color: var(--text-secondary);
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   font-weight: 400;
   margin: 0 auto 3rem;
   max-width: 520px;
@@ -440,21 +744,27 @@ h1 {
 }
 
 /* ============================================
-   Translator Component
-   ============================================ */
+    Translator Component
+    ============================================ */
 .translator {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  background: var(--primary-bg);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: var(--radius);
   padding: 2.5rem;
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
   position: relative;
   overflow: hidden;
-  animation: slideIn 0.6s ease-out 0.4s both;
+  animation: slideIn 0.8s ease-out 0.4s both;
   will-change: transform, opacity;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+:root.dark .translator {
+  background: rgba(42, 42, 62, 0.7);
 }
 
 .translator::before {
@@ -463,18 +773,40 @@ h1 {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
   background: var(--gradient);
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.translator::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: var(--gradient-glow);
+  border-radius: calc(var(--radius) + 2px);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.translator:hover::after {
+  opacity: 1;
 }
 
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(50px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -541,17 +873,19 @@ textarea {
   min-height: 200px;
   height: 260px;
   resize: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 textarea:hover {
   border-color: var(--accent);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05), var(--shadow-glow);
 }
 
 textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05), 0 0 0 3px rgba(59, 130, 246, 0.2), var(--shadow-glow);
 }
 
 textarea[readonly] {
@@ -574,16 +908,32 @@ textarea::placeholder {
   padding: 0.5rem;
   cursor: pointer;
   color: var(--text-primary);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#copyOutputBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
 }
 
 #copyOutputBtn:hover {
-  background: var(--accent);
   color: #fff;
-  transform: scale(1.05);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: var(--shadow-glow);
+}
+
+#copyOutputBtn:hover::before {
+  opacity: 1;
 }
 
 #copyOutputBtn:focus-visible {
@@ -596,9 +946,15 @@ textarea::placeholder {
   color: #fff;
 }
 
+/* Copy button icon positioning */
+#copyOutputBtn svg {
+  position: relative;
+  z-index: 1;
+}
+
 /* ============================================
-    Translate Button
-    ============================================ */
+     Translate Button
+     ============================================ */
 .button-group {
   display: flex;
   flex-direction: column;
@@ -618,18 +974,44 @@ textarea::placeholder {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+#swapBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
 }
 
 #swapBtn:hover {
-  background: var(--accent);
   color: #fff;
-  transform: scale(1.05);
+  transform: scale(1.15) rotate(180deg);
+  box-shadow: var(--shadow-glow);
+}
+
+#swapBtn:hover::before {
+  opacity: 1;
 }
 
 #swapBtn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+#swapBtn svg {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.4s ease;
+}
+
+#swapBtn:hover svg {
+  transform: scale(1.1);
 }
 
 #translateBtn {
@@ -641,28 +1023,52 @@ textarea::placeholder {
   background: var(--gradient);
   color: #fff;
   border: none;
-  border-radius: var(--radius);
+  border-radius: 50%;
   cursor: pointer;
-  box-shadow: var(--shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow), var(--shadow-glow);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
   position: relative;
   overflow: hidden;
   will-change: transform;
   flex-shrink: 0;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: var(--shadow), var(--shadow-glow); }
+  50% { box-shadow: var(--shadow-lg), var(--shadow-glow-lg); }
 }
 
 #translateBtn::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+#translateBtn::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  background: var(--gradient);
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0;
+  filter: blur(10px);
+  animation: translateRipple 2s ease-in-out infinite;
+}
+
+@keyframes translateRipple {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.4); opacity: 0; }
 }
 
 #translateBtn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-lg);
 }
 
 #translateBtn:hover::before {
@@ -691,15 +1097,33 @@ textarea::placeholder {
 }
 
 /* ============================================
-   Analysis Card
-   ============================================ */
+    Analysis Card
+    ============================================ */
 .analysis {
   margin-top: 2.25rem;
-  background: var(--primary-bg);
+  background: rgba(255, 255, 255, 0.7);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 2.25rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), var(--shadow-glow);
+  animation: analysisFadeIn 0.6s ease-out both;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+:root.dark .analysis {
+  background: rgba(42, 42, 62, 0.7);
+}
+
+@keyframes analysisFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .analysis h2 {
@@ -710,37 +1134,64 @@ textarea::placeholder {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .analysis h2::before {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 20px;
+  width: 8px;
+  height: 24px;
   background: var(--gradient);
-  border-radius: 3px;
+  border-radius: 4px;
   flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+  animation: pulseHeight 2s ease-in-out infinite;
+}
+
+@keyframes pulseHeight {
+  0%, 100% { height: 20px; }
+  50% { height: 28px; }
 }
 
 #analysisResult {
   color: var(--text-secondary);
   font-size: 0.875rem;
   line-height: 1.8;
+  animation: textSlideIn 0.8s ease-out 0.2s both;
+}
+
+@keyframes textSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* ============================================
-   About Content
-   ============================================ */
+    About Content
+    ============================================ */
 .about-content {
-  background: var(--primary-bg);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: var(--radius);
   padding: 2.5rem;
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
   position: relative;
   overflow: hidden;
-  animation: slideIn 0.6s ease-out 0.4s both;
+  animation: slideIn 0.8s ease-out 0.4s both;
   will-change: transform, opacity;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+:root.dark .about-content {
+  background: rgba(42, 42, 62, 0.7);
 }
 
 .about-content::before {
@@ -749,8 +1200,10 @@ textarea::placeholder {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
   background: var(--gradient);
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+  animation: shimmer 3s ease-in-out infinite;
 }
 
 .about-content h2 {
@@ -758,6 +1211,10 @@ textarea::placeholder {
   font-weight: 700;
   margin-bottom: 1rem;
   color: var(--text-primary);
+  background: var(--gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .about-content p {
@@ -774,6 +1231,19 @@ textarea::placeholder {
 .about-content li {
   margin-bottom: 0.5rem;
   color: var(--text-secondary);
+  position: relative;
+  padding-left: 1rem;
+}
+
+.about-content li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 4px;
+  height: 4px;
+  background: var(--gradient);
+  border-radius: 50%;
 }
 
 /* ============================================
@@ -843,15 +1313,15 @@ textarea::placeholder {
 }
 
 /* ============================================
-   Responsive — Tablet (≤768px)
-   ============================================ */
+    Responsive — Tablet (≤768px)
+    ============================================ */
 @media (max-width: 768px) {
   header {
     padding: 1rem 1.5rem;
   }
 
   .logo {
-    font-size: 1.5rem;
+    font-size: 1.625rem;
   }
 
   nav a {
@@ -869,8 +1339,8 @@ textarea::placeholder {
   }
 
   #themeToggle {
-    width: 2rem;
-    height: 2rem;
+    width: 2.25rem;
+    height: 2.25rem;
     margin-left: 0;
   }
 
@@ -879,7 +1349,7 @@ textarea::placeholder {
   }
 
   h1 {
-    font-size: 2.25rem;
+    font-size: 2.5rem;
   }
 
   .subtitle {
@@ -891,6 +1361,10 @@ textarea::placeholder {
     flex-direction: column;
     padding: 1.5rem;
     gap: 1.5rem;
+  }
+
+  .translator::before {
+    height: 3px;
   }
 
   .divider {
@@ -907,13 +1381,13 @@ textarea::placeholder {
    }
 
    #swapBtn {
-     width: 2.5rem;
-     height: 2.5rem;
+     width: 2.75rem;
+     height: 2.75rem;
    }
 
    #translateBtn {
-     width: 3rem;
-     height: 3rem;
+     width: 3.25rem;
+     height: 3.25rem;
      margin: 0;
    }
 
@@ -927,8 +1401,8 @@ textarea::placeholder {
 }
 
 /* ============================================
-    Auth Forms
-    ============================================ */
+     Auth Forms
+     ============================================ */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -949,17 +1423,19 @@ textarea::placeholder {
   padding: 0.875rem 1rem;
   font-size: 1rem;
   font-family: inherit;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .form-group input:hover {
   border-color: var(--accent);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05), var(--shadow-glow);
 }
 
 .form-group input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05), 0 0 0 3px rgba(59, 130, 246, 0.2), var(--shadow-glow);
 }
 
 .auth-btn {
@@ -973,42 +1449,73 @@ textarea::placeholder {
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: var(--shadow);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+  box-shadow: var(--shadow), var(--shadow-glow);
+  position: relative;
+  overflow: hidden;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.auth-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.3);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
 }
 
 .auth-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-lg);
+}
+
+.auth-btn:hover::before {
+  opacity: 1;
 }
 
 .auth-btn:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
 }
 
 .message {
   margin-top: 1rem;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   border-radius: var(--radius);
   font-size: 0.875rem;
   font-weight: 500;
+  animation: messageFadeIn 0.5s ease-out both;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+@keyframes messageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message.success {
-  background: rgba(34, 197, 94, 0.1);
+  background: rgba(34, 197, 94, 0.15);
   color: #16a34a;
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .message.error {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.15);
   color: #dc2626;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 /* ============================================
-    Responsive — Mobile (≤480px)
-    ============================================ */
+     Responsive — Mobile (≤480px)
+     ============================================ */
 @media (max-width: 480px) {
   /* --- Header: двухрядный layout ---
      Ряд 1: логотип + кнопки справа
@@ -1020,7 +1527,7 @@ textarea::placeholder {
   }
 
   .logo {
-    font-size: 1.375rem;
+    font-size: 1.5rem;
     flex-shrink: 0;
   }
 
@@ -1038,7 +1545,7 @@ textarea::placeholder {
   nav a {
     margin-left: 0;
     margin-right: 1.25rem;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     padding-bottom: 0.25rem;
   }
 
@@ -1049,14 +1556,14 @@ textarea::placeholder {
   }
 
   #themeToggle {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
     margin-left: 0;
   }
 
   #historyToggle {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
     margin-right: 0;
   }
 
@@ -1077,7 +1584,7 @@ textarea::placeholder {
 
   /* Ссылка "Войти" — короткая, влезает */
   .login-link {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     white-space: nowrap;
   }
 
@@ -1106,19 +1613,19 @@ textarea::placeholder {
   }
 
   h1 {
-    font-size: 1.75rem;
+    font-size: 2rem;
     letter-spacing: -0.02em;
   }
 
   .subtitle {
-    font-size: 0.9375rem;
+    font-size: 1rem;
     margin-bottom: 1.5rem;
   }
 
   /* --- Translator --- */
   .translator {
     padding: 1rem;
-    border-radius: 10px;
+    border-radius: 12px;
     gap: 1rem;
   }
 
@@ -1136,13 +1643,13 @@ textarea::placeholder {
 
   /* Кнопки swap/translate — крупнее для удобного тапа */
   #swapBtn {
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 3rem;
+    height: 3rem;
   }
 
   #translateBtn {
-    width: 3.25rem;
-    height: 3.25rem;
+    width: 3.5rem;
+    height: 3.5rem;
   }
 
   /* --- Analysis & About --- */
@@ -1157,23 +1664,23 @@ textarea::placeholder {
 }
 
 /* ============================================
-   Responsive — Very small (≤360px)
-   ============================================ */
+    Responsive — Very small (≤360px)
+    ============================================ */
 @media (max-width: 360px) {
   header {
-    padding: 0.75rem 0.875rem;
+    padding: 0.625rem 0.75rem;
   }
 
   .logo {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 
   .subtitle {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
   }
 
   .translator {
