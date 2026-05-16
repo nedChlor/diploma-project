@@ -2,42 +2,62 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="LexAI — интеллектуальный переводчик с анализом лексики на основе искусственного интеллекта. Поддержка русского, английского и казахского языков.">
-  <meta name="theme-color" content="#667eea">
+  <meta name="theme-color" content="#1d5c40">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <title>LexAI — переводчик и анализ лексики</title>
 
-  <!-- Preconnect для ускорения загрузки шрифтов -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- Firebase конфигурация -->
   <script type="module" src="js/firebase-config.js"></script>
 </head>
 <body>
 
-  <!-- Ссылка для быстрого перехода к контенту (доступность) -->
   <a href="#main-content" class="skip-link">Перейти к содержимому</a>
 
+  <!-- kept for JS compatibility, hidden via CSS -->
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
   <header>
-    <div class="logo" aria-label="LexAI — главная">LexAI</div>
+    <a href="index.html" class="logo" aria-label="LexAI — главная">
+      <svg class="logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1d5c40"/>
+            <stop offset="100%" stop-color="#4dcb84"/>
+          </linearGradient>
+        </defs>
+        <path d="M18 2 L6 10 L6 26 L18 34 L30 26 L30 10 Z" fill="url(#logoGrad)" opacity="0.15"/>
+        <path d="M18 2 L6 10 L6 26 L18 34 L30 26 L30 10 Z" stroke="url(#logoGrad)" stroke-width="2" fill="none"/>
+        <path d="M14 14 L18 10 L22 14" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 10 L18 26" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M14 22 L18 26 L22 22" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      LexAI
+    </a>
     <nav aria-label="Основная навигация">
       <a href="index.html" aria-current="page">Переводчик</a>
       <a href="about.html">О проекте</a>
     </nav>
-    <div class="header-right" style="margin-left: auto;">
+    <div class="header-right">
       <div id="userInfo" class="user-info hidden">
         <button id="userButton" class="user-button" aria-label="Меню пользователя">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
           <span id="userName">Пользователь</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="m6 9 6 6 6-6"/>
           </svg>
         </button>
@@ -45,36 +65,46 @@
           <button id="logoutBtn" class="dropdown-item">Выйти</button>
         </div>
       </div>
-      <button id="historyToggle" aria-label="История переводов" title="История переводов">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button id="historyToggle" class="header-btn" aria-label="История переводов" title="История переводов">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/>
           <polyline points="12,6 12,12 16,14"/>
         </svg>
       </button>
       <a href="login.html" id="loginLink" class="login-link">Войти</a>
-      <button id="themeToggle" aria-label="Переключить тему" title="Переключить тему">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"/>
-          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-        </svg>
+      <button id="themeToggle" class="header-btn" aria-label="Переключить тему" title="Переключить тему">
+        <span class="theme-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </span>
       </button>
     </div>
   </header>
-  <!-- Main content -->
+
   <main id="main-content">
     <h1>Интеллектуальный переводчик</h1>
     <p class="subtitle">Перевод и анализ текста на основе искусственного интеллекта</p>
 
-    <!-- Translator section -->
     <div class="translator" role="region" aria-label="Переводчик">
+      <!-- Decorative corner elements -->
+      <svg class="translator-corner tl" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <path d="M0 20 L0 0 L20 0" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.25"/>
+      </svg>
+      <svg class="translator-corner br" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <path d="M20 0 L20 20 L0 20" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.25"/>
+      </svg>
 
-      <!-- Левая панель — исходный текст -->
       <div class="box">
-        <label class="box-label" for="langFrom">Исходный язык</label>
+        <label class="box-label" for="langFrom">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="m12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Исходный язык
+        </label>
         <select id="langFrom" name="langFrom">
-          <option value="русский">Русский</option>
-          <option value="английский">Английский</option>
-          <option value="казахский">Казахский</option>
+          <option value="русский">🇷🇺 Русский</option>
+          <option value="английский">🇬🇧 Английский</option>
+          <option value="казахский">🇰🇿 Казахский</option>
         </select>
 
         <label class="sr-only" for="inputText">Текст для перевода</label>
@@ -85,20 +115,17 @@
           aria-describedby="inputHint"
           spellcheck="true"
           autocomplete="off"
+          inputmode="text"
         ></textarea>
         <span id="inputHint" class="sr-only">Введите текст, который нужно перевести</span>
+        <div class="char-count" id="charCount">0 / 5000</div>
       </div>
 
       <div class="divider" aria-hidden="true"></div>
 
       <div class="button-group">
-        <button
-          id="swapBtn"
-          aria-label="Поменять языки местами"
-          title="Поменять языки"
-          type="button"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <button id="swapBtn" aria-label="Поменять языки местами" title="Поменять языки" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="m16 3 4 4-4 4"/>
             <path d="M20 7H4"/>
             <path d="m8 21-4-4 4-4"/>
@@ -106,29 +133,29 @@
           </svg>
         </button>
 
-        <button
-          id="translateBtn"
-          aria-label="Перевести текст"
-          title="Перевести"
-          type="button"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="2" x2="22" y1="12" y2="12"/>
-            <path d="m12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-          </svg>
+        <button id="translateBtn" aria-label="Перевести текст" title="Перевести" type="button">
+          <span class="btn-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 1 0 10 10"/>
+              <path d="M2 12h20"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </span>
+          <span class="btn-spinner spinner"></span>
         </button>
       </div>
 
       <div class="divider" aria-hidden="true"></div>
 
-      <!-- Правая панель — результат перевода -->
       <div class="box">
-        <label class="box-label" for="langTo">Перевод</label>
+        <label class="box-label" for="langTo">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="m12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Перевод
+        </label>
         <select id="langTo" name="langTo">
-          <option value="английский">Английский</option>
-          <option value="русский">Русский</option>
-          <option value="казахский">Казахский</option>
+          <option value="английский">🇬🇧 Английский</option>
+          <option value="русский">🇷🇺 Русский</option>
+          <option value="казахский">🇰🇿 Казахский</option>
         </select>
 
         <label class="sr-only" for="outputText">Результат перевода</label>
@@ -142,7 +169,7 @@
           aria-label="Результат перевода"
         ></textarea>
         <button id="copyOutputBtn" aria-label="Копировать перевод" title="Копировать">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
@@ -151,30 +178,37 @@
 
     </div>
 
-    <!-- Блок анализа лексики — скрыт до первого перевода -->
-    <section
-      id="analysis"
-      class="analysis hidden"
-      aria-label="Анализ лексики"
-      aria-live="polite"
-    >
-      <h2>Анализ лексики</h2>
-      <div id="analysisResult"></div>
+    <section id="analysis" class="analysis hidden" aria-label="Анализ лексики" aria-live="polite">
+      <div class="analysis-header">
+        <h2>Анализ лексики</h2>
+      </div>
+      <div id="analysisResult" class="analysis-grid"></div>
     </section>
   </main>
 
-  <!-- Боковое окно истории -->
   <aside id="historySidebar" class="history-sidebar" aria-label="История переводов">
+    <div class="history-handle"></div>
     <div class="history-header">
-      <h3>История переводов</h3>
+      <h3>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12,6 12,12 16,14"/>
+        </svg>
+        История переводов
+      </h3>
     </div>
     <div id="historyList" class="history-list"></div>
     <div class="history-footer">
-      <button id="clearHistory" aria-label="Очистить историю">Очистить историю</button>
+      <button id="clearHistory" aria-label="Очистить историю">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18"/>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        </svg>
+        Очистить историю
+      </button>
     </div>
   </aside>
 
-  <!-- defer: скрипт загружается после парсинга HTML, не блокируя рендер -->
   <script src="js/app.js" defer></script>
 </body>
 </html>

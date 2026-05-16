@@ -2,92 +2,165 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="LexAI — авторизация пользователя">
-  <meta name="theme-color" content="#667eea">
+  <meta name="theme-color" content="#1d5c40">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <title>Авторизация — LexAI</title>
 
-  <!-- Preconnect для ускорения загрузки шрифтов -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- Firebase конфигурация -->
   <script type="module" src="js/firebase-config.js"></script>
 </head>
 <body>
 
-  <!-- Ссылка для быстрого перехода к контенту (доступность) -->
   <a href="#main-content" class="skip-link">Перейти к содержимому</a>
 
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
   <header>
-    <div class="logo" aria-label="LexAI — главная">LexAI</div>
+    <a href="index.html" class="logo" aria-label="LexAI — главная">
+      <svg class="logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1d5c40"/>
+            <stop offset="100%" stop-color="#4dcb84"/>
+          </linearGradient>
+        </defs>
+        <path d="M18 2 L6 10 L6 26 L18 34 L30 26 L30 10 Z" fill="url(#logoGrad2)" opacity="0.15"/>
+        <path d="M18 2 L6 10 L6 26 L18 34 L30 26 L30 10 Z" stroke="url(#logoGrad2)" stroke-width="2" fill="none"/>
+        <path d="M14 14 L18 10 L22 14" stroke="url(#logoGrad2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 10 L18 26" stroke="url(#logoGrad2)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M14 22 L18 26 L22 22" stroke="url(#logoGrad2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      LexAI
+    </a>
     <nav aria-label="Основная навигация">
       <a href="index.html">Переводчик</a>
       <a href="about.html">О проекте</a>
       <a href="login.html" aria-current="page">Войти</a>
     </nav>
-    <button id="themeToggle" style="margin-left: auto;" aria-label="Переключить тему" title="Переключить тему">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="5"/>
-        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-      </svg>
-    </button>
+    <div class="header-right">
+      <button id="themeToggle" class="header-btn" aria-label="Переключить тему" title="Переключить тему">
+        <span class="theme-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </span>
+      </button>
+    </div>
   </header>
 
   <main id="main-content">
     <h1>Авторизация</h1>
     <p class="subtitle">Войдите в свой аккаунт или зарегистрируйтесь</p>
 
-    <div class="translator" role="region" aria-label="Форма авторизации">
-
-      <!-- Левая панель — Вход -->
-      <div class="box">
-        <h2>Вход</h2>
-        <form id="loginForm">
-          <div class="form-group">
-            <label for="loginEmail">Email</label>
-            <input type="email" id="loginEmail" name="email" required placeholder="your@email.com">
-          </div>
-          <div class="form-group">
-            <label for="loginPassword">Пароль</label>
-            <input type="password" id="loginPassword" name="password" required placeholder="Пароль">
-          </div>
-          <button type="submit" class="auth-btn">Войти</button>
-        </form>
-        <div id="loginMessage" class="message"></div>
+    <div class="auth-container">
+      <!-- Decorative geometric shapes -->
+      <svg class="auth-deco deco-1" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+        <rect x="8" y="8" width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.15" transform="rotate(45 20 20)"/>
+      </svg>
+      <svg class="auth-deco deco-2" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" focusable="false">
+        <circle cx="15" cy="15" r="10" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.12"/>
+      </svg>
+      <div class="auth-tabs" id="authTabs">
+        <button class="auth-tab active" data-tab="login" type="button">Вход</button>
+        <button class="auth-tab" data-tab="register" type="button">Регистрация</button>
       </div>
 
-      <div class="divider" aria-hidden="true"></div>
+      <div class="auth-form-wrapper">
+        <div id="loginFormWrapper">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <div class="input-wrapper">
+                <input type="email" id="loginEmail" name="email" required placeholder="your@email.com" autocomplete="email" inputmode="email">
+                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Пароль</label>
+              <div class="input-wrapper">
+                <input type="password" id="loginPassword" name="password" required placeholder="Ваш пароль" autocomplete="current-password">
+                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+            </div>
+            <button type="submit" class="auth-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10,17 15,12 10,7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+              Войти
+            </button>
+          </form>
+          <div id="loginMessage" class="message hidden"></div>
+        </div>
 
-      <!-- Правая панель — Регистрация -->
-      <div class="box">
-        <h2>Регистрация</h2>
-        <form id="registerForm">
-          <div class="form-group">
-            <label for="registerEmail">Email</label>
-            <input type="email" id="registerEmail" name="email" required placeholder="your@email.com">
-          </div>
-          <div class="form-group">
-            <label for="registerPassword">Пароль</label>
-            <input type="password" id="registerPassword" name="password" required placeholder="Пароль">
-          </div>
-          <div class="form-group">
-            <label for="registerConfirmPassword">Подтвердите пароль</label>
-            <input type="password" id="registerConfirmPassword" name="confirmPassword" required placeholder="Подтвердите пароль">
-          </div>
-          <button type="submit" class="auth-btn">Зарегистрироваться</button>
-        </form>
-        <div id="registerMessage" class="message"></div>
+        <div id="registerFormWrapper" class="hidden">
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="registerEmail">Email</label>
+              <div class="input-wrapper">
+                <input type="email" id="registerEmail" name="email" required placeholder="your@email.com" autocomplete="email" inputmode="email">
+                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="registerPassword">Пароль</label>
+              <div class="input-wrapper">
+                <input type="password" id="registerPassword" name="password" required placeholder="Минимум 6 символов" autocomplete="new-password">
+                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="registerConfirmPassword">Подтвердите пароль</label>
+              <div class="input-wrapper">
+                <input type="password" id="registerConfirmPassword" name="confirmPassword" required placeholder="Повторите пароль" autocomplete="new-password">
+                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+            </div>
+            <button type="submit" class="auth-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="8.5" cy="7" r="4"/>
+                <line x1="20" y1="8" x2="20" y2="14"/>
+                <line x1="23" y1="11" x2="17" y2="11"/>
+              </svg>
+              Зарегистрироваться
+            </button>
+          </form>
+          <div id="registerMessage" class="message hidden"></div>
+        </div>
       </div>
-
     </div>
   </main>
 
-  <!-- defer: скрипт загружается после парсинга HTML, не блокируя рендер -->
   <script src="js/app.js" defer></script>
   <script src="js/auth.js" defer></script>
 </body>
