@@ -681,7 +681,7 @@ textarea {
   outline: none;
   height: 220px;
   min-height: 180px;
-  padding: 0;
+  padding: 2%;
   caret-color: var(--accent);
   transition: color var(--t-slow) var(--ease);
 }
@@ -783,11 +783,9 @@ textarea::placeholder { color: var(--text-3); }
   border-radius: 50%;
   cursor: pointer;
   color: #fff;
-  transition: background var(--t) var(--ease), transform var(--t) var(--ease),
-              box-shadow var(--t) var(--ease);
+  transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease);
   box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.32);
   position: relative;
-  overflow: visible;
   flex-shrink: 0;
 }
 
@@ -799,23 +797,13 @@ textarea::placeholder { color: var(--text-3); }
   border: 1.5px solid rgba(var(--accent-rgb), 0.2);
   border-radius: 50%;
   transition: border-color var(--t) var(--ease), inset var(--t) var(--ease);
+  pointer-events: none;
 }
 
 #translateBtn:hover::before {
   border-color: rgba(var(--accent-rgb), 0.4);
   inset: -7px;
 }
-
-#translateBtn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0.12);
-  opacity: 0;
-  transition: opacity var(--t) var(--ease);
-}
-
-#translateBtn:hover::after { opacity: 1; }
 
 #translateBtn:hover {
   box-shadow: 0 8px 28px rgba(var(--accent-rgb), 0.42);
@@ -827,38 +815,58 @@ textarea::placeholder { color: var(--text-3); }
   box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.28);
 }
 
-#translateBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+#translateBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
-#translateBtn.loading .btn-icon { opacity: 0; }
-#translateBtn.loading .btn-spinner { opacity: 1; }
+/* Loading state */
+#translateBtn.loading {
+  pointer-events: none;
+}
+
+#translateBtn.loading .btn-icon {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+#translateBtn.loading .btn-spinner {
+  opacity: 1;
+}
 
 .btn-icon {
-  transition: opacity 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .btn-spinner {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  margin-left: -11px;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.25s ease;
 }
 
 .spinner {
-  width: 18px;
-  height: 18px;
-  border: 2.5px solid rgba(255,255,255,0.3);
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-top-color: #fff;
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  animation: btn-spin 0.5s linear infinite;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* ---- Copy output button ---- */
 #copyOutputBtn {
