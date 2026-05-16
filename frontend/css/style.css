@@ -37,7 +37,6 @@
 
   /* Typography */
   --font-display: 'Cormorant', Georgia, serif;
-  --font-body:    'DM Sans', -apple-system, sans-serif;
 
   /* Shape */
   --radius-sm:   6px;
@@ -114,6 +113,7 @@ html {
    ============================================================ */
 body {
   font-family: var(--font-body);
+  font-size: 1.2rem;
   background: var(--bg);
   color: var(--text-1);
   min-height: 100vh;
@@ -945,12 +945,6 @@ textarea::placeholder { color: var(--text-3); }
 .analysis-header h2 {
   font-size: 1.125rem;
   letter-spacing: -0.01em;
-}
-
-.analysis-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 1rem;
 }
 
 .analysis-card {
