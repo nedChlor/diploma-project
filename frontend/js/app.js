@@ -43,6 +43,50 @@ if (logoutBtn) {
 }
 
 // ============================================
+// Mobile Nav (hamburger)
+// ============================================
+
+const menuToggle = document.getElementById('menuToggle');
+const mobileNav = document.getElementById('mobileNav');
+const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+function openMobileNav() {
+  mobileNav.classList.add('open');
+  mobileNavOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileNav() {
+  mobileNav.classList.remove('open');
+  mobileNavOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+if (menuToggle) {
+  menuToggle.addEventListener('click', () => {
+    if (mobileNav.classList.contains('open')) {
+      closeMobileNav();
+    } else {
+      openMobileNav();
+    }
+  });
+}
+
+if (mobileNavOverlay) {
+  mobileNavOverlay.addEventListener('click', closeMobileNav);
+}
+
+if (mobileNav) {
+  mobileNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMobileNav);
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeMobileNav();
+});
+
+// ============================================
 // Translation History Management
 // ============================================
 

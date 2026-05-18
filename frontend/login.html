@@ -50,6 +50,13 @@
       <a href="login.html" aria-current="page">Войти</a>
     </nav>
     <div class="header-right">
+      <button id="menuToggle" class="header-btn menu-toggle" aria-label="Меню" title="Меню">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
       <button id="themeToggle" class="header-btn" aria-label="Переключить тему" title="Переключить тему">
         <span class="theme-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -60,6 +67,13 @@
       </button>
     </div>
   </header>
+
+  <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
+  <nav id="mobileNav" class="mobile-nav" aria-label="Мобильная навигация">
+    <a href="index.html">Переводчик</a>
+    <a href="about.html">О проекте</a>
+    <a href="login.html" aria-current="page">Войти</a>
+  </nav>
 
   <main id="main-content">
     <h1>Авторизация</h1>
