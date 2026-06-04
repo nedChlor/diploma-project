@@ -1,4 +1,48 @@
 // ============================================
+// Toast Notifications
+// ============================================
+
+function showToast(message, type = 'info') {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+
+  let iconSvg = '';
+  if (type === 'success') {
+    iconSvg = `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+  } else if (type === 'error') {
+    iconSvg = `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
+  } else {
+    iconSvg = `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+  }
+
+  toast.innerHTML = `
+    <div class="toast-icon">${iconSvg}</div>
+    <div class="toast-message">${message}</div>
+  `;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('toast-leave');
+    toast.addEventListener('animationend', () => {
+      toast.remove();
+      if (container.children.length === 0) {
+        container.remove();
+      }
+    });
+  }, 3500);
+}
+
+window.showToast = showToast;
+
+// ============================================
 // Firebase Auth State
 // ============================================
 
@@ -90,7 +134,11 @@ document.addEventListener('keydown', (e) => {
 // Translation History Management
 // ============================================
 
-async function loadHistory() {
+let allHistoryCache = [];
+let historyCurrentPage = 0;
+const HISTORY_PAGE_SIZE = 10;
+
+async function fetchAllHistory() {
   if (window.currentUser) {
     try {
       const q = window.query(
@@ -103,9 +151,10 @@ async function loadHistory() {
         history.push({ id: doc.id, ...doc.data() });
       });
       history.sort((a, b) => b.timestamp - a.timestamp);
-      return history.slice(0, 50);
+      return history;
     } catch (error) {
       console.error('Error loading history from Firestore:', error);
+      showToast('Ошибка загрузки истории', 'error');
       return [];
     }
   } else {
@@ -118,8 +167,22 @@ async function loadHistory() {
       console.error('Error parsing localStorage history:', e);
       history = [];
     }
+    history.sort((a, b) => b.timestamp - a.timestamp);
     return history;
   }
+}
+
+async function loadHistory(isLoadMore = false) {
+  if (!isLoadMore) {
+    historyCurrentPage = 0;
+    allHistoryCache = await fetchAllHistory();
+  } else {
+    historyCurrentPage++;
+  }
+  
+  const start = historyCurrentPage * HISTORY_PAGE_SIZE;
+  const end = start + HISTORY_PAGE_SIZE;
+  return allHistoryCache.slice(start, end);
 }
 
 async function saveHistory(history) {
@@ -147,27 +210,37 @@ async function addToHistory(translationData) {
 }
 
 async function removeFromHistory(index) {
+  const item = allHistoryCache[index];
   if (window.currentUser) {
     try {
-      const history = await loadHistory();
-      const item = history[index];
       if (item && item.id) {
         await window.deleteDoc(window.doc(window.db, 'translations', item.id));
       }
     } catch (error) {
       console.error('Error deleting from Firestore:', error);
+      showToast('Ошибка при удалении', 'error');
     }
   } else {
-    const history = await loadHistory();
-    history.splice(index, 1);
-    saveHistory(history);
+    allHistoryCache.splice(index, 1);
+    saveHistory(allHistoryCache);
   }
 }
 
-async function renderHistory() {
-  const history = await loadHistory();
+async function renderHistory(isLoadMore = false) {
+  const historyChunk = await loadHistory(isLoadMore);
 
-  if (history.length === 0) {
+  const loadMoreContainer = document.getElementById('loadMoreContainer');
+  if (loadMoreContainer) {
+    if (historyChunk.length === HISTORY_PAGE_SIZE) {
+      loadMoreContainer.classList.remove('hidden');
+    } else {
+      loadMoreContainer.classList.add('hidden');
+    }
+  }
+
+  const historyToRender = allHistoryCache.slice(0, (historyCurrentPage + 1) * HISTORY_PAGE_SIZE);
+
+  if (historyToRender.length === 0) {
     historyList.innerHTML = `
       <div class="history-empty">
         <p>Пока пусто —<br>сделайте первый перевод!</p>
@@ -176,7 +249,7 @@ async function renderHistory() {
     return;
   }
 
-  historyList.innerHTML = history.map((item, index) => `
+  historyList.innerHTML = historyToRender.map((item, index) => `
     <div class="history-item" data-index="${index}">
       <div class="history-item-header">
         <span class="history-item-lang">${item.fromLang} → ${item.toLang}</span>
@@ -198,7 +271,7 @@ async function renderHistory() {
 
   document.querySelectorAll('.history-item').forEach(item => {
     const index = parseInt(item.dataset.index, 10);
-    const historyItem = history[index];
+    const historyItem = historyToRender[index];
 
     item.addEventListener('click', (e) => {
       if (e.target.closest('.delete-btn')) return;
@@ -279,6 +352,7 @@ const copyOutputBtn = document.getElementById('copyOutputBtn');
 const historyToggle = document.getElementById('historyToggle');
 const historySidebar = document.getElementById('historySidebar');
 const clearHistory = document.getElementById('clearHistory');
+const loadMoreBtn = document.getElementById('loadMoreBtn');
 const historyList = document.getElementById('historyList');
 const inputText = document.getElementById('inputText');
 const outputText = document.getElementById('outputText');
@@ -380,7 +454,7 @@ if (translateBtn) {
     const text = inputText.value.trim();
 
     if (!text) {
-      alert('Введите текст для перевода');
+      showToast('Введите текст для перевода', 'error');
       return;
     }
 
@@ -401,13 +475,13 @@ if (translateBtn) {
       const status = response.status;
 
       if (status === 503) {
-        alert('Сервис перевода временно перегружен. Попробуйте через несколько минут.');
+        showToast('Сервис перевода временно перегружен. Попробуйте через несколько минут.', 'error');
         return;
       } else if (status === 429) {
-        alert('Превышен лимит запросов. Попробуйте позже.');
+        showToast('Превышен лимит запросов. Попробуйте позже.', 'error');
         return;
       } else if (status === 400) {
-        alert('Некорректный запрос. Проверьте введённые данные.');
+        showToast('Некорректный запрос. Проверьте введённые данные.', 'error');
         return;
       }
 
@@ -416,12 +490,12 @@ if (translateBtn) {
         data = await response.json();
       } catch (jsonError) {
         console.error('JSON parse error:', jsonError);
-        alert('Ошибка: Неверный ответ сервера');
+        showToast('Ошибка: Неверный ответ сервера', 'error');
         return;
       }
 
       if (!response.ok) {
-        alert('Ошибка: ' + (data.error || 'Неизвестная ошибка сервера'));
+        showToast('Ошибка: ' + (data.error || 'Неизвестная ошибка сервера'), 'error');
         return;
       }
 
@@ -445,7 +519,7 @@ if (translateBtn) {
       });
 
     } catch (error) {
-      alert('Ошибка сети. Убедитесь что бэкенд запущен.\n' + error.message);
+      showToast('Ошибка сети. Убедитесь что бэкенд запущен.<br>' + error.message, 'error');
     } finally {
       translateBtn.disabled = false;
       translateBtn.classList.remove('loading');
@@ -477,11 +551,12 @@ if (copyOutputBtn) {
   copyOutputBtn.addEventListener('click', async () => {
     const text = outputText.value.trim();
     if (!text) {
-      alert('Нет текста для копирования');
+      showToast('Нет текста для копирования', 'error');
       return;
     }
     try {
       await navigator.clipboard.writeText(text);
+      showToast('Текст скопирован', 'success');
       copyOutputBtn.classList.add('success');
       copyOutputBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
       setTimeout(() => {
@@ -489,7 +564,7 @@ if (copyOutputBtn) {
         copyOutputBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
       }, 1500);
     } catch (err) {
-      alert('Не удалось скопировать текст');
+      showToast('Не удалось скопировать текст', 'error');
     }
   });
 }
@@ -500,6 +575,16 @@ if (historyToggle) {
     if (historySidebar.classList.contains('open')) {
       await renderHistory();
     }
+  });
+}
+
+if (loadMoreBtn) {
+  loadMoreBtn.addEventListener('click', async () => {
+    loadMoreBtn.disabled = true;
+    loadMoreBtn.textContent = 'Загрузка...';
+    await renderHistory(true);
+    loadMoreBtn.disabled = false;
+    loadMoreBtn.textContent = 'Загрузить еще';
   });
 }
 

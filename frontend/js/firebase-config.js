@@ -1,7 +1,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, limit } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, limit, startAfter } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCD3NeDwVOYEHZywqBrnfv8REf1TCNwfEs",
@@ -34,7 +34,8 @@ export {
   query,
   where,
   orderBy,
-  limit
+  limit,
+  startAfter
 };
 
 // Global variables for non-module scripts
@@ -53,3 +54,4 @@ window.query = query;
 window.where = where;
 window.orderBy = orderBy;
 window.limit = limit;
+window.startAfter = startAfter;
