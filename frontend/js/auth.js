@@ -25,7 +25,6 @@ if (loginForm) {
     try {
       const userCredential = await window.signInWithEmailAndPassword(window.auth, email, password);
       const user = userCredential.user;
-      console.log('User signed in:', user);
       window.location.href = 'index.html';
     } catch (error) {
       console.error('Login error:', error);
@@ -73,7 +72,6 @@ if (registerForm) {
     try {
       const userCredential = await window.createUserWithEmailAndPassword(window.auth, email, password);
       const user = userCredential.user;
-      console.log('User registered:', user);
       window.location.href = 'index.html';
     } catch (error) {
       console.error('Registration error:', error);

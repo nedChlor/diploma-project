@@ -11,7 +11,7 @@ from flask_limiter.util import get_remote_address
 from openai import OpenAI
 
 # Local imports
-from config import OPENROUTER_API_KEY, DEBUG, PORT, MAX_TEXT_LENGTH, REQUESTS_PER_MINUTE
+from config import OPENROUTER_API_KEY, MODEL_NAME, DEBUG, PORT, MAX_TEXT_LENGTH, REQUESTS_PER_MINUTE
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -97,7 +97,7 @@ Respond with valid JSON in this format:
 
         # Call OpenRouter API
         response = client.chat.completions.create(
-            model="openrouter/owl-alpha",
+            model = MODEL_NAME,
             messages=[{"role": "user", "content": prompt}],
         )
 

@@ -139,9 +139,6 @@ body::before {
 
 :root.dark body::before { opacity: 0.05; }
 
-/* Kill blobs from old design */
-.bg-blobs, .blob { display: none !important; }
-
 /* ============================================================
    Geometric Background Pattern
    ============================================================ */
@@ -1109,6 +1106,7 @@ textarea::placeholder { color: var(--text-3); }
   color: var(--text-1);
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.5;

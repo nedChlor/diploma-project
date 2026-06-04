@@ -5,6 +5,7 @@ load_dotenv()
 
 # API Configuration
 OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY')  # API key for OpenRouter service
+MODEL_NAME = os.getenv('MODEL_NAME')
 
 # Application Settings
 DEBUG = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'  # Enable debug mode
