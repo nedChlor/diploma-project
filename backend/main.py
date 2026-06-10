@@ -1,7 +1,11 @@
 # Standard library imports
+import os
+import sys
 import json
 import logging
 import re
+import webbrowser
+from threading import Timer
 
 # Third-party imports
 from flask import Flask, request, jsonify, send_from_directory
@@ -17,7 +21,14 @@ from config import OPENROUTER_API_KEY, MODEL_NAME, DEBUG, PORT, MAX_TEXT_LENGTH,
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__, static_folder='../frontend', static_url_path='')
+if getattr(sys, 'frozen', False):
+    base_dir = os.path.dirname(sys.executable)
+else:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+frontend_dir = os.path.abspath(os.path.join(base_dir, '..', 'frontend'))
+
+app = Flask(__name__, static_folder=frontend_dir, static_url_path='')
 CORS(app)
 
 # Rate limiting
@@ -85,15 +96,25 @@ def translate():
     try:
         # Create prompt for AI
         prompt = f"""Translate the following text from {from_lang} to {to_lang}.
-Then analyze key words from the TRANSLATED text only — explain what they mean, in {from_lang}.
+Then perform a professional lexical and stylistic analysis of the ORIGINAL text.
+All explanations must be written in {to_lang}.
 
-Text: "{text}"
-
-Respond with valid JSON in this format:
+Respond ONLY with valid JSON, no markdown, no extra text:
 {{
   "translation": "translated text here",
-  "analysis": "lexical analysis here"
-}}"""
+  "analysis": {{
+    "words": [
+      {{
+        "word": "original word or phrase",
+        "explanation": "meaning and role in the text"
+      }}
+    ],
+    "style": "detailed description of the text's tone, mood, and stylistic features"
+  }}
+}}
+
+Text: "{text}"
+"""
 
         # Call OpenRouter API
         response = client.chat.completions.create(
@@ -108,18 +129,20 @@ Respond with valid JSON in this format:
             return jsonify({'error': 'Translation service returned empty response'}), 500
 
         # Extract JSON from response
-        json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
-        if json_match:
-            try:
+        try:
+            json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+            if json_match:
                 result = json.loads(json_match.group())
                 translation = result.get('translation', '').strip() or 'Translation not found'
-                analysis = result.get('analysis', '').strip() or 'Analysis not available'
-            except json.JSONDecodeError:
+                analysis_obj = result.get('analysis', {})
+                # Сериализуем обратно как JSON для передачи на фронт
+                analysis = json.dumps(analysis_obj, ensure_ascii=False)
+            else:
                 translation = response_text or 'Translation not found'
-                analysis = 'Analysis not available'
-        else:
+                analysis = json.dumps({"words": [], "style": "Analysis not available"}, ensure_ascii=False)
+        except (json.JSONDecodeError, AttributeError):
             translation = response_text or 'Translation not found'
-            analysis = 'Analysis not available'
+            analysis = json.dumps({"words": [], "style": "Analysis not available"}, ensure_ascii=False)
 
         logger.info("Translation successful")
         return jsonify({'translation': translation, 'analysis': analysis})
@@ -135,4 +158,5 @@ Respond with valid JSON in this format:
             return jsonify({'error': 'Translation service error. Try again later.'}), 500
 
 if __name__ == '__main__':
+    Timer(1, lambda: webbrowser.open_new(f'http://localhost:{PORT}/')).start()
     app.run(debug=DEBUG, port=PORT)

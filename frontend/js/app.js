@@ -412,41 +412,34 @@ window.addEventListener('load', () => {
   updateCharCount();
 });
 
-function renderAnalysis(analysisHtml) {
-  // Split analysis into sections by headers (## or **)
-  const sections = [];
-  const lines = analysisHtml.split('<br>');
-  let currentSection = { title: '', content: [] };
-
-  lines.forEach(line => {
-    const headerMatch = line.match(/<strong>(.+?)<\/strong>/);
-    if (headerMatch && line.replace(/<[^>]+>/g, '').trim().length < 60) {
-      if (currentSection.content.length > 0 || currentSection.title) {
-        sections.push({ ...currentSection });
-      }
-      currentSection = { title: headerMatch[1], content: [] };
-    } else {
-      const cleanLine = line.replace(/<[^>]+>/g, '').trim();
-      if (cleanLine) {
-        currentSection.content.push(line);
-      }
-    }
-  });
-  if (currentSection.title || currentSection.content.length > 0) {
-    sections.push(currentSection);
-  }
-
-  if (sections.length <= 1) {
-    analysisResult.innerHTML = `<div class="analysis-card"><div class="card-content">${analysisHtml}</div></div>`;
+function renderAnalysis(analysisRaw) {
+  let data;
+  try {
+    data = typeof analysisRaw === 'string' ? JSON.parse(analysisRaw) : analysisRaw;
+  } catch (e) {
+    // Fallback для старых текстовых ответов
+    analysisResult.innerHTML = `<div class="analysis-card"><div class="card-content">${analysisRaw}</div></div>`;
     return;
   }
 
-  analysisResult.innerHTML = sections.map(section => `
+  const words = data.words || [];
+  const style = data.style || '';
+
+  const wordCards = words.map(item => `
     <div class="analysis-card">
-      ${section.title ? `<h3>${section.title}</h3>` : ''}
-      <div class="card-content">${section.content.join('<br>')}</div>
+      <h3>${item.word}</h3>
+      <div class="card-content">${item.explanation}</div>
     </div>
   `).join('');
+
+  const styleCard = style ? `
+    <div class="analysis-card">
+      <h3>Стиль и настроение</h3>
+      <div class="card-content">${style}</div>
+    </div>
+  ` : '';
+
+  analysisResult.innerHTML = wordCards + styleCard;
 }
 
 if (translateBtn) {
@@ -501,10 +494,7 @@ if (translateBtn) {
 
       outputText.value = data.translation;
 
-      let analysis = data.analysis
-        .replace(/\n/g, '<br>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>');
+      const analysis = data.analysis;
 
       renderAnalysis(analysis);
       analysisSection.classList.remove('hidden');

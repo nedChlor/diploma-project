@@ -2,3 +2,7 @@ venv/
 __pycache__/
 .env
 .kilo/
+*.exe
+build/
+dist/
+main.spec
