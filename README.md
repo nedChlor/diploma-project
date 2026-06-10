@@ -37,8 +37,9 @@
 diploma-project/
 ├── backend/
 │   ├── main.py          # Flask-сервер, API-эндпоинты
-│   ├── config.py        # Конфигурация (ключи, модель, порт)
-│   └── requirements.txt
+│   ├── config.py        # Конфигурация (читает переменные из .env)
+│   ├── requirements.txt
+│   └── .env             # Не в репозитории — создать вручную
 ├── frontend/
 │   ├── index.html       # Главная страница (переводчик)
 │   ├── about.html       # О проекте
@@ -46,7 +47,7 @@ diploma-project/
 │   ├── css/
 │   │   └── style.css
 │   └── js/
-│       ├── app.js           # Основная логика
+│       ├── app.js
 │       └── firebase-config.js
 └── .gitignore
 ```
@@ -69,23 +70,18 @@ cd backend
 pip install -r requirements.txt
 ```
 
-### 3. Создать файл конфигурации
+### 3. Создать файл `.env`
 
-Создайте файл `backend/config.py`:
+Создайте файл `backend/.env` со следующим содержимым:
 
-```python
-OPENROUTER_API_KEY = "your_openrouter_api_key"
-MODEL_NAME = "your_model_name"
-DEBUG = True
-PORT = 5000
-MAX_TEXT_LENGTH = 5000
-REQUESTS_PER_MINUTE = 60
+```env
+OPENROUTER_API_KEY=your_openrouter_api_key
+MODEL_NAME=your_model_name
 ```
 
 ### 4. Запустить сервер
 
 ```bash
-cd backend
 python main.py
 ```
 
@@ -128,12 +124,14 @@ python main.py
 
 ---
 
-## Переменные окружения (для Render)
+## Переменные окружения
 
-| Переменная | Описание |
-|-----------|---------|
-| `OPENROUTER_API_KEY` | API-ключ OpenRouter |
-| `MODEL_NAME` | Название модели |
+| Переменная | Описание | По умолчанию |
+|-----------|---------|-------------|
+| `OPENROUTER_API_KEY` | API-ключ OpenRouter | — (обязательно) |
+| `MODEL_NAME` | Название модели OpenRouter | — |
+| `FLASK_DEBUG` | Режим отладки Flask | `False` |
+| `PORT` | Порт сервера | `5000` |
 
 ---
 
@@ -141,6 +139,5 @@ python main.py
 
 Разработано в рамках дипломного проекта по специальности «Программное обеспечение» (06130100).
 
-**Студент:** Чловеков Н.  
 **Руководитель:** Тулепбергенова Р.А.  
 **Учебное заведение:** Политехнический колледж, Шымкент
