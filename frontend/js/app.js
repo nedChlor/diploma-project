@@ -385,8 +385,12 @@ if (inputText) {
 if (langFrom) {
   langFrom.addEventListener('change', () => {
     const newLangFrom = langFrom.value;
-    if (newLangFrom === langTo.value) {
-      langTo.value = lastLangFrom;
+    if (newLangFrom !== 'auto' && newLangFrom === langTo.value) {
+      if (lastLangFrom === 'auto') {
+        langTo.value = newLangFrom === 'английский' ? 'русский' : 'английский';
+      } else {
+        langTo.value = lastLangFrom;
+      }
     }
     lastLangFrom = newLangFrom;
   });
@@ -519,6 +523,10 @@ if (translateBtn) {
 
 if (swapBtn) {
   swapBtn.addEventListener('click', () => {
+    if (langFrom.value === 'auto') {
+      showToast('Невозможно поменять языки местами при автоопределении', 'info');
+      return;
+    }
     const tempLang = langFrom.value;
     langFrom.value = langTo.value;
     langTo.value = tempLang;

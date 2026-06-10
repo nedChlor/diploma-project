@@ -84,7 +84,7 @@ def translate():
         logger.warning(f"Text too long: {len(text)} characters")
         return jsonify({'error': f'Text too long (max {MAX_TEXT_LENGTH} characters)'}), 400
     valid_langs = ['русский', 'английский', 'казахский']
-    if from_lang not in valid_langs or to_lang not in valid_langs:
+    if from_lang not in valid_langs + ['auto'] or to_lang not in valid_langs:
         logger.warning(f"Invalid languages: from={from_lang}, to={to_lang}")
         return jsonify({'error': 'Invalid language selection'}), 400
     if from_lang == to_lang:
@@ -95,9 +95,16 @@ def translate():
 
     try:
         # Create prompt for AI
-        prompt = f"""Translate the following text from {from_lang} to {to_lang}.
+        if from_lang == 'auto':
+            prompt = f"""Translate the following text to {to_lang}. Automatically detect the source language.
 Then perform a professional lexical and stylistic analysis of the ORIGINAL text.
-All explanations must be written in {to_lang}.
+All explanations must be written in {to_lang}."""
+        else:
+            prompt = f"""Translate the following text from {from_lang} to {to_lang}.
+Then perform a professional lexical and stylistic analysis of the ORIGINAL text.
+All explanations must be written in {to_lang}."""
+        
+        prompt += f"""
 
 Respond ONLY with valid JSON, no markdown, no extra text:
 {{

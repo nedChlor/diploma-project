@@ -2334,3 +2334,352 @@ textarea::placeholder { color: var(--text-3); }
     width: 100%;
   }
 }
+/* ============================================================
+   LexAI — "Avant-Garde Editorial" Experimental Theme
+   Aesthetic: Ethereal, High-contrast, Unhackneyed (No Glass)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Surfaces - warmer, more premium */
+  --bg: #EAE6DD;
+  --surface: #F5F2EA;
+  --surface-2: #E0DACB;
+  --surface-3: #D1C9B6;
+
+  /* Text - very high contrast */
+  --text-1: #0A0A09;
+  --text-2: #4D4A43;
+  --text-3: #8A857A;
+
+  /* Accent — rich terracotta / burnt orange */
+  --accent: #C84B31;
+  --accent-hover: #A3351C;
+  --accent-light: rgba(200, 75, 49, 0.12);
+  --accent-rgb: 200, 75, 49;
+
+  /* Borders - structural, distinct */
+  --border: #C8C2B3;
+  --border-strong: #A8A191;
+
+  /* Shadows - deep, soft but grounded (no blur/glass) */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 32px 80px rgba(0, 0, 0, 0.08);
+
+  /* Fonts */
+  --font-display: 'Instrument Serif', 'Cormorant', serif;
+  --font-body: 'Outfit', 'DM Sans', sans-serif;
+
+  /* Shapes - very rounded for organic feel contrasting with sharp typography */
+  --radius-sm: 12px;
+  --radius: 24px;
+  --radius-lg: 32px;
+}
+
+/* Dark mode overrides */
+:root.dark {
+  --bg: #0D0D0C;
+  --surface: #141413;
+  --surface-2: #21201E;
+  --surface-3: #2E2C2A;
+
+  --text-1: #F5F2EA;
+  --text-2: #B3AE9F;
+  --text-3: #757268;
+
+  --accent: #FF7043;
+  --accent-hover: #FF8A65;
+  --accent-light: rgba(255, 112, 67, 0.15);
+  --accent-rgb: 255, 112, 67;
+
+  --border: #2E2C2A;
+  --border-strong: #4A4643;
+}
+
+/* 1. Body and Background adjustments */
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+}
+
+body::after {
+  /* An elegant architectural grid instead of geometric dots */
+  background-image: 
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: top center;
+  opacity: 0.4;
+  z-index: -1;
+}
+
+:root.dark body::after {
+  opacity: 0.15;
+}
+
+/* 2. Typography Enhancements */
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--text-1);
+}
+
+h1::after {
+  display: none; /* Remove the old small accent line */
+}
+
+.subtitle {
+  text-align: center;
+  margin: 0 auto 3rem auto;
+  font-weight: 300;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* 3. The Translator Layout Restructure */
+.translator {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  gap: 1.5rem;
+  overflow: visible;
+  flex-direction: row; /* For desktop */
+}
+
+/* Remove corner brackets and top border */
+.translator-corner,
+.translator::before {
+  display: none !important;
+}
+
+.box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s;
+}
+
+.box:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+
+.box::after {
+  display: none; /* Remove diamond corners */
+}
+
+.divider {
+  display: none; /* Remove vertical line dividers */
+}
+
+/* 4. Inputs and Controls */
+select {
+  background-color: var(--surface-2);
+  border: 1px solid transparent;
+  border-radius: 50px; /* Pill shaped selects */
+  padding: 0.75rem 2.5rem 0.75rem 1.25rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  box-shadow: var(--shadow-sm);
+}
+
+select:hover {
+  background-color: var(--surface-3);
+}
+
+textarea {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1.4;
+  padding: 1rem;
+  height: 360px;
+  min-height: 280px;
+}
+
+/* 5. Button Group - Floating Island */
+.button-group {
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0;
+  z-index: 10;
+  background: transparent;
+}
+
+#translateBtn {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 2rem; /* perfectly round */
+  background: var(--text-1); /* High contrast black/white button */
+  color: var(--bg);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s;
+}
+
+#translateBtn::before {
+  display: none; /* Remove old ring */
+}
+
+:root.dark #translateBtn {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 10px 25px rgba(0, 230, 153, 0.25);
+}
+
+#translateBtn:hover {
+  transform: scale(1.1) rotate(5deg);
+  background: var(--accent);
+}
+
+#swapBtn {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+#swapBtn::before {
+  display: none;
+}
+
+#swapBtn:hover {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Mobile Responsiveness for Translator Grid */
+@media (max-width: 860px) {
+  .translator {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .button-group {
+    flex-direction: row;
+    padding: 1rem 0;
+  }
+}
+
+/* 6. Header refinement */
+header {
+  background: transparent; /* No background */
+  border-bottom: none;
+  padding-top: 1.5rem;
+}
+
+header::after {
+  display: none; /* Remove geometric line */
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text-1) !important;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo::before, .logo::after {
+  display: none; /* Remove corner accents */
+}
+
+/* Let's make the logo icon stand out */
+.logo-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.logo-icon path[fill^="url"] {
+  fill: var(--accent) !important;
+  opacity: 0.1 !important;
+}
+
+.logo-icon path[stroke^="url"] {
+  stroke: var(--text-1) !important;
+}
+
+/* User controls */
+.header-btn {
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+}
+
+.login-link {
+  border-radius: 50px;
+  padding: 0.5rem 1.25rem;
+  background: var(--text-1);
+  color: var(--bg);
+  border: none;
+}
+
+.login-link:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.login-link::after {
+  display: none;
+}
+
+/* Comprehensive Mobile Adjustments */
+@media (max-width: 768px) {
+  header {
+    padding-top: 0.5rem;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+  }
+  
+  .logo-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .box {
+    padding: 1.25rem;
+    border-radius: var(--radius);
+  }
+
+  textarea {
+    font-size: 1.4rem;
+    height: 240px;
+    min-height: 200px;
+  }
+
+  #translateBtn {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+}
