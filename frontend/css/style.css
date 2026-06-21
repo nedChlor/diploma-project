@@ -2539,7 +2539,7 @@ textarea {
 :root.dark #translateBtn {
   background: var(--accent);
   color: var(--bg);
-  box-shadow: 0 10px 25px rgba(0, 230, 153, 0.25);
+  box-shadow: 0 0 25px rgba(255, 112, 67, 0.35);
 }
 
 #translateBtn:hover {
